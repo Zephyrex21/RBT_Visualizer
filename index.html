@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Blackify | Interactive Learning Tool</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <h1>Red Blackify
+                <h4>"Visualize. Rotate. Learn."</h4>
+            </h1>
+
+            <p class="subtitle">Red Blackify is an interactive tool to visualize and understand Red-Black Tree</p>
+            
+            <!-- Theme toggle switch -->
+            <div class="theme-toggle">
+                <span class="theme-toggle-label">Dark</span>
+                <div class="theme-switch" id="themeSwitch">
+                    <div class="theme-switch-slider">
+                        <span class="theme-icon" id="themeIcon">🌙</span>
+                    </div>
+                </div>
+                <span class="theme-toggle-label">Light</span>
+            </div>
+
+        </header>
+
+        <div class="main-layout">
+
+            <div class="visualization-panel">
+
+                <div class="tree-container" id="treeContainer" role="img" aria-label="Tree visualization">
+
+                    <!-- Tree placeholder with historical information -->
+                    <div class="tree-placeholder" id="treePlaceholder">
+                        <div class="placeholder-title">Red-Black Tree</div>
+                        <div class="placeholder-content">
+                            <div class="placeholder-section">
+                                <div class="placeholder-section-title">Origin & History</div>
+                                <p>Red-Black Trees were invented in <span class="placeholder-highlight">1972</span> by <span class="placeholder-highlight">Rudolf Bayer</span>, who originally called them "symmetric binary B-trees". The name "red-black" was later coined by <span class="placeholder-highlight">Leonidas J. Guibas</span> and <span class="placeholder-highlight">Robert Sedgewick</span> in 1978.</p>
+                            </div>
+                            <div class="placeholder-section">
+                                <div class="placeholder-section-title">Purpose & Applications</div>
+                                <p>Red-Black Trees were created to provide a balanced binary search tree with <span class="placeholder-highlight">O(log n)</span> time complexity for search, insert, and delete operations. They are widely used in computer science, including in the Linux kernel's Completely Fair Scheduler and in many programming language standard libraries.</p>
+                            </div>
+                            <div class="placeholder-section">
+                                <div class="placeholder-section-title">Key Innovation</div>
+                                <p>The innovation of Red-Black Trees lies in their use of a simple color property (red or black) and a set of rules to maintain balance. This approach requires fewer rotations than AVL trees, making insertions and deletions faster in practice.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <svg id="treeSvg"></svg>
+                    
+                    <!-- Node tooltip -->
+                    <div class="node-tooltip" id="nodeTooltip">
+                        <div class="tooltip-title">Node Information</div>
+                        <div class="tooltip-row">
+                            <span class="tooltip-label">Value:</span>
+                            <span class="tooltip-value" id="tooltipValue">-</span>
+                        </div>
+                        <div class="tooltip-row">
+                            <span class="tooltip-label">Color:</span>
+                            <span class="tooltip-value" id="tooltipColor">-</span>
+                        </div>
+                        <div class="tooltip-row">
+                            <span class="tooltip-label">Parent:</span>
+                            <span class="tooltip-value" id="tooltipParent">-</span>
+                        </div>
+                        <div class="tooltip-row">
+                            <span class="tooltip-label">Uncle:</span>
+                            <span class="tooltip-value" id="tooltipUncle">-</span>
+                        </div>
+                        <div class="tooltip-row">
+                            <span class="tooltip-label">Children:</span>
+                            <span class="tooltip-value" id="tooltipChildren">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" onclick="zoomIn()" aria-label="Zoom in">+</button>
+                        <button class="zoom-btn" onclick="zoomOut()" aria-label="Zoom out">−</button>
+                        <button class="zoom-btn" onclick="resetZoom()" aria-label="Reset zoom">⟲</button>
+                    </div>
+
+                </div>
+
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color red"></div>
+                        <span>Red Node</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color black"></div>
+                        <span>Black Node</span>
+                    </div>
+                    <div class="legend-item" id="nilLegend" style="display: none;">
+                        <div class="legend-color nil"></div>
+                        <span>NIL (Null) Node</span>
+                    </div>
+                    <div class="legend-item" id="balanceLegend" style="display: none;">
+                        <div class="legend-color balance"></div>
+                        <span>Balance Factor</span>
+                    </div>
+                </div>
+                
+                <div class="traversal-panel">
+                    <div class="panel-header">
+                        <span>🔍</span> Traversals
+                    </div>
+                    <table class="traversal-table">
+                        <thead>
+                            <tr>
+                                <th>Traversal Type</th>
+                                <th>Result</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Inorder</strong></td>
+                                <td>
+                                    <div class="traversal-result" id="inorderResult">-</div>
+                                </td>
+                                <td>
+                                    <button class="traversal-btn" onclick="visualizeTraversal('inorder')">Visualize</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Preorder</strong></td>
+                                <td>
+                                    <div class="traversal-result" id="preorderResult">-</div>
+                                </td>
+                                <td>
+                                    <button class="traversal-btn" onclick="visualizeTraversal('preorder')">Visualize</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Postorder</strong></td>
+                                <td>
+                                    <div class="traversal-result" id="postorderResult">-</div>
+                                </td>
+                                <td>
+                                    <button class="traversal-btn" onclick="visualizeTraversal('postorder')">Visualize</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="history-section">
+                    <div class="history-title">
+                        <span>📜 Operation History</span>
+                        <button onclick="clearHistory()" class="danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Clear</button>
+                    </div>
+                    <div class="history-list" id="historyList">
+                        <div style="text-align: center; color: var(--text-secondary); padding: 1.5rem;">
+                            No operations performed yet
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="right-panel">
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>⚙️</span> Controls
+                    </div>
+                    
+                    <div class="panel-section">
+                        <div class="tree-type-selector">
+                            <button class="tree-type-btn active" id="rbTreeBtn" onclick="switchTreeType('rb')">Red-Black Tree</button>
+                            <button class="tree-type-btn" id="avlTreeBtn" onclick="switchTreeType('avl')">AVL Tree</button>
+                        </div>
+                    </div>
+                    
+                    <div class="panel-section">
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="number" id="nodeValue" placeholder="Enter value" min="0" max="999">
+                                <button onclick="insertNode()" class="success" id="insertBtn">Insert</button>
+                            </div>
+                            <div class="input-group">
+                                <input type="number" id="deleteValue" placeholder="Delete value" min="0" max="999">
+                                <button onclick="deleteNode()" class="danger" id="deleteBtn">Delete</button>
+                            </div>
+                            <div class="input-group">
+                                <input type="number" id="searchValue" placeholder="Search value" min="0" max="999">
+                                <button onclick="searchNode()" class="secondary">Search</button>
+                            </div>
+                            <button onclick="generateRandom()" class="secondary" id="randomBtn">Generate Random</button>
+                            <button onclick="clearTree()" class="danger" id="clearBtn">Clear Tree</button>
+                        </div>
+                    </div>
+
+                    <div class="panel-section">
+                        <div class="toggle-container">
+                            <span>Show Null Leaves:</span>
+                            <div class="toggle-switch" id="nullToggle" onclick="toggleNullLeaves()">
+                                <div class="toggle-slider"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section">
+                        <div class="speed-control">
+                            <label for="animSpeed">Animation Speed:</label>
+                            <input type="range" id="animSpeed" min="100" max="2000" value="600" step="100">
+                            <span class="speed-value" id="speedValue">600ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <span>📈</span> Tree Statistics
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="nodeCount">0</div>
+                            <div class="stat-label">Nodes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="treeHeight">0</div>
+                            <div class="stat-label">Height</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="treeStat">-</div>
+                            <div class="stat-label" id="treeStatLabel">Black Height</div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section">
+                        <div class="info-section">
+                            <div class="info-title">
+                                <span>⚡</span> Key Points
+                            </div>
+                            <div class="key-points">
+                                <div class="key-point">
+                                    <div class="key-point-icon">🎯</div>
+                                    <div class="key-point-text">O(log n) guaranteed</div>
+                                </div>
+                                <div class="key-point">
+                                    <div class="key-point-icon">⚖️</div>
+                                    <div class="key-point-text">Self-balancing</div>
+                                </div>
+                                <div class="key-point">
+                                    <div class="key-point-icon">🔄</div>
+                                    <div class="key-point-text">Rotations fix violations</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel" style="flex-grow: 1; display: flex; flex-direction: column;">
+                    <div class="panel-header">
+                        <span>📝</span> Algorithm
+                    </div>
+                    
+                    <div class="algorithm-section">
+                        <div class="algorithm-display" id="algorithmDisplay">
+                            <div class="current-step">
+                                <span>✨</span>
+                                <span>Ready to perform operations</span>
+                            </div>
+                            <div class="step-description">Select an operation to see the algorithm steps</div>
+                        </div>
+                        
+                        <div class="tips-section">
+                            <div class="tips-title">
+                                <span>💡</span> Quick Tips
+                            </div>
+                            <ul class="tips-list">
+                                <li class="tips-item">Red-Black trees allow faster insertions</li>
+                                <li class="tips-item">AVL trees provide faster lookups</li>
+                                <li class="tips-item">Both maintain O(log n) complexity</li>
+                                <li class="tips-item">Switch types to compare structures</li>
+                                <li class="tips-item">Use mouse wheel to zoom in/out</li>
+                                <li class="tips-item">Drag to pan the tree view</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bottom-sections">
+
+            <div class="small-panel">
+
+                <div class="panel-header">
+                    <span>📖</span> Tree Properties
+                </div>
+
+                <div class="properties-grid">
+                    <div class="property-card">
+                        <div class="property-number" id="prop1">5</div>
+                        <div class="property-title">Properties</div>
+                        <div class="property-description">Fundamental rules for balance</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-number">O(log n)</div>
+                        <div class="property-title">Time Complexity</div>
+                        <div class="property-description">Guaranteed performance</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-number" id="prop3">2x</div>
+                        <div class="property-title">Height Limit</div>
+                        <div class="property-description">Max 2× log₂(n+1)</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-number">1 bit</div>
+                        <div class="property-title">Memory</div>
+                        <div class="property-description">Color info per node</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-number">3</div>
+                        <div class="property-title">Pointers</div>
+                        <div class="property-description">Left, right, parent</div>
+                    </div>
+                    <div class="property-card">
+                        <div class="property-number">2</div>
+                        <div class="property-title">Rotations</div>
+                        <div class="property-description">Left & right only</div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="small-panel">
+
+                <div class="panel-header">
+                    <span id="rulesTitle">📋</span> <span id="rulesTitleText">Red-Black Tree Rules</span>
+                </div>
+
+                <div class="rules-list" id="rulesList">
+                    <!-- Rules will be dynamically inserted here -->
+                </div>
+
+            </div>
+
+            <div class="small-panel">
+
+                <div class="panel-header">
+                    <span>🎓</span> Tutorial
+                </div>
+
+                <div class="tutorial-section">
+                    <div class="tutorial-step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <div class="step-title">Insert a Node</div>
+                            <div class="step-description">Enter a value and click Insert</div>
+                        </div>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <div class="step-title">Watch Balancing</div>
+                            <div class="step-description">Observe automatic rebalancing</div>
+                        </div>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Switch Tree Types</div>
+                            <div class="step-description">Compare RB and AVL trees</div>
+                        </div>
+                    </div>
+                    <div class="tutorial-step">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <div class="step-title">Check Algorithm</div>
+                            <div class="step-description">View algorithm steps</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="panel" style="margin-bottom: 1.5rem;">
+
+            <div class="panel-header">
+                <span>⚡</span> Performance & Complexity
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+
+                <div>
+                    <div class="info-title" style="margin-bottom: 0.75rem;">
+                        <span>📊</span> Time Complexity
+                    </div>
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Best Case</th>
+                                <th>Average Case</th>
+                                <th>Worst Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Search</td>
+                                <td><span class="complexity-badge best">O(1)</span></td>
+                                <td><span class="complexity-badge average">O(log n)</span></td>
+                                <td><span class="complexity-badge worst">O(log n)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Insert</td>
+                                <td><span class="complexity-badge best">O(1)</span></td>
+                                <td><span class="complexity-badge average">O(log n)</span></td>
+                                <td><span class="complexity-badge worst">O(log n)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Delete</td>
+                                <td><span class="complexity-badge best">O(1)</span></td>
+                                <td><span class="complexity-badge average">O(log n)</span></td>
+                                <td><span class="complexity-badge worst">O(log n)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Rotation</td>
+                                <td><span class="complexity-badge best">O(1)</span></td>
+                                <td><span class="complexity-badge average">O(1)</span></td>
+                                <td><span class="complexity-badge worst">O(log n)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <div class="info-title" style="margin-bottom: 0.75rem;">
+                        <span>💾</span> Space Complexity
+                    </div>
+                    <table class="complexity-table">
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Best Case</th>
+                                <th>Average Case</th>
+                                <th>Worst Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tree Storage</td>
+                                <td><span class="complexity-badge best">O(n)</span></td>
+                                <td><span class="complexity-badge average">O(n)</span></td>
+                                <td><span class="complexity-badge worst">O(n)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Color Bit </td>
+                                <td><span class="complexity-badge best">O(n)</span></td>
+                                <td><span class="complexity-badge average">O(n)</span></td>
+                                <td><span class="complexity-badge worst">O(n)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Pointers</td>
+                                <td><span class="complexity-badge best">O(n)</span></td>
+                                <td><span class="complexity-badge average">O(n)</span></td>
+                                <td><span class="complexity-badge worst">O(n)</span></td>
+                            </tr>
+                            <tr>
+                                <td>Total</td>
+                                <td><span class="complexity-badge best">O(n)</span></td>
+                                <td><span class="complexity-badge average">O(n)</span></td>
+                                <td><span class="complexity-badge worst">O(n)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="comparison-section">
+
+            <h2 style="text-align: center; margin-bottom: 1rem; color: var(--accent); font-size: 1.5rem;">Red-Black Tree vs AVL Tree
+            </h2>
+
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="tree-type rb-tree">Red-Black Tree</div>
+                    <div class="metric">
+                        <span class="metric-label">Balance Factor</span>
+                        <span class="metric-value">±1 (approximate)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Insertion</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Deletion</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Search</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Rotations</span>
+                        <span class="metric-value">≤ 2 rotations</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Color Changes</span>
+                        <span class="metric-value">O(1)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Use Case</span>
+                        <span class="metric-value">General purpose</span>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="tree-type avl-tree">AVL Tree</div>
+                    <div class="metric">
+                        <span class="metric-label">Balance Factor</span>
+                        <span class="metric-value">Exactly ±1</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Insertion</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Deletion</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Search</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Rotations</span>
+                        <span class="metric-value">Multiple rotations</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Color Changes</span>
+                        <span class="metric-value">N/A</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Use Case</span>
+                        <span class="metric-value">Read-heavy</span>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="tree-type" style="color: var(--success);">Performance Analysis</div>
+                    <div class="metric">
+                        <span class="metric-label">Memory</span>
+                        <span class="metric-value">RB: +1 bit per node</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Insert Speed</span>
+                        <span class="metric-value">RB: Faster</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Delete Speed</span>
+                        <span class="metric-value">RB: Faster</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Search Speed</span>
+                        <span class="metric-value">AVL: Slightly faster</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Implementation</span>
+                        <span class="metric-value">RB: More complex</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Tree Height</span>
+                        <span class="metric-value">AVL: More balanced</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Popular Use</span>
+                        <span class="metric-value">RB: Linux scheduler</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="toast" id="toast">
+    </div>
+
+    <script src="script.js">
+    </script>
+    
+</body>
+</html>
