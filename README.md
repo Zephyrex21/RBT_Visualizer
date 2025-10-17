@@ -91,7 +91,7 @@ A **Red-Black Tree (RBT)** is a type of **self-balancing binary search tree** th
 🎓 B.Tech CSE (Data Science), NSUT Dwarka  
 💬 “Building interactive tools to visualize algorithms and make learning fun.”  
 
-🔗 [GitHub Profile](https://github.com/<your-username>)  
+🔗 [GitHub Profile](https://github.com/Zephyrex21)  
 📸 Nature Photographer & Poet 🌿  
 
 ---
