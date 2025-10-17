@@ -4,25 +4,12 @@
     box-sizing: border-box;
 }
 
-.comic-relief-regular {
-  font-family: "Comic Relief", system-ui;
-  font-weight: 400;
-  font-style: normal;
-}
-
-.comic-relief-bold {
-  font-family: "Comic Relief", system-ui;
-  font-weight: 700;
-  font-style: normal;
-}
-
-
 :root {
     /* Dark mode colors (existing) */
-    --primary: #e83434;
+    --primary: #dc2626;
     --primary-dark: #991b1b;
     --secondary: #1f2937;
-    --accent: #4887ed;
+    --accent: #3b82f6;
     --success: #10b981;
     --warning: #f59e0b;
     --bg-dark: #0f172a;
@@ -48,7 +35,7 @@
 }
 
 body {
-    font-family: "Comic Relief", system-ui;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background: linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-light) 100%);
     color: var(--text-primary);
     min-height: 100vh;
@@ -76,19 +63,12 @@ header {
 }
 
 h1 {
-    font-size: 3rem;
-    font-weight: bolder;
+    font-size: 2.5rem;
+    font-weight: 800;
     background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0.5rem;
-}
-
-h4{
-    font-size: 1.1rem;
-    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 body.light-mode h1 {
@@ -681,6 +661,7 @@ body.light-mode .avl-tree { color: var(--light-accent); }
     background: var(--bg-dark);
     border-radius: 0.5rem;
     transition: background 0.3s ease;
+    flex-wrap: wrap;
 }
 
 body.light-mode .legend {
@@ -1375,29 +1356,7 @@ body.light-mode .tips-item:before {
     to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 1400px) {
-    .main-layout {
-        grid-template-columns: 1fr;
-    }
-    
-    .right-panel {
-        flex-direction: row;
-    }
-    
-    .bottom-sections {
-        grid-template-columns: 1fr;
-    }
-    
-    .properties-grid,
-    .key-points {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    h1 {
-        font-size: 2rem;
-    }
-}
-
+/* Toast styles */
 .toast {
     position: fixed;
     bottom: 2rem;
@@ -1715,6 +1674,7 @@ body.light-mode .traversal-btn:hover {
     border-radius: 0.25rem;
     margin-top: 0.5rem;
     transition: color 0.3s ease, background 0.3s ease;
+    word-break: break-all;
 }
 
 body.light-mode .traversal-result {
@@ -1970,4 +1930,875 @@ body.light-mode .placeholder-section-title {
 
 body.light-mode .placeholder-highlight {
     color: var(--light-accent);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .right-panel {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .panel {
+        flex: 1 1 300px;
+    }
+    
+    .bottom-sections {
+        grid-template-columns: 1fr;
+    }
+    
+    .properties-grid,
+    .key-points {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .main-layout {
+        gap: 1rem;
+    }
+    
+    .right-panel {
+        flex-direction: column;
+    }
+    
+    .bottom-sections {
+        grid-template-columns: 1fr;
+    }
+    
+    .properties-grid,
+    .key-points {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .comparison-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tree-container {
+        height: 300px;
+    }
+    
+    .legend {
+        gap: 1rem;
+    }
+    
+    .legend-item {
+        font-size: 0.8rem;
+    }
+    
+    .traversal-table {
+        font-size: 0.8rem;
+    }
+    
+    .traversal-result {
+        font-size: 0.75rem;
+    }
+    
+    .complexity-table {
+        font-size: 0.8rem;
+    }
+    
+    .node-tooltip {
+        min-width: 160px;
+        padding: 0.6rem;
+    }
+    
+    .toast {
+        bottom: 1rem;
+        right: 1rem;
+        left: 1rem;
+        transform: translateY(100px);
+    }
+    
+    .toast.show {
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 0.75rem;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .subtitle {
+        font-size: 1rem;
+    }
+    
+    .theme-toggle {
+        position: static;
+        margin-top: 1rem;
+        justify-content: center;
+    }
+    
+    .tree-container {
+        height: 250px;
+    }
+    
+    .legend {
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+    
+    .legend-item {
+        font-size: 0.75rem;
+    }
+    
+    .legend-color {
+        width: 15px;
+        height: 15px;
+    }
+    
+    .panel {
+        padding: 1rem;
+    }
+    
+    .panel-header {
+        font-size: 1rem;
+    }
+    
+    .input-group {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .controls {
+        gap: 0.5rem;
+    }
+    
+    button {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .stat-card {
+        padding: 0.5rem;
+    }
+    
+    .stat-value {
+        font-size: 1.2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .properties-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .property-card {
+        padding: 0.5rem;
+    }
+    
+    .property-number {
+        font-size: 1.2rem;
+    }
+    
+    .property-title {
+        font-size: 0.75rem;
+    }
+    
+    .property-description {
+        font-size: 0.65rem;
+    }
+    
+    .key-points {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .key-point {
+        padding: 0.5rem;
+    }
+    
+    .key-point-icon {
+        font-size: 1.2rem;
+    }
+    
+    .key-point-text {
+        font-size: 0.7rem;
+    }
+    
+    .rules-list {
+        gap: 0.3rem;
+    }
+    
+    .rule-item {
+        padding: 0.4rem;
+    }
+    
+    .rule-number {
+        width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+    }
+    
+    .rule-title {
+        font-size: 0.7rem;
+    }
+    
+    .rule-description {
+        font-size: 0.6rem;
+        margin-left: 20px;
+    }
+    
+    .tutorial-step {
+        gap: 0.5rem;
+    }
+    
+    .step-number {
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+    }
+    
+    .step-title {
+        font-size: 0.8rem;
+    }
+    
+    .step-description {
+        font-size: 0.7rem;
+    }
+    
+    .algorithm-display {
+        padding: 1rem;
+        min-height: 200px;
+    }
+    
+    .current-step {
+        font-size: 1rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .step-type {
+        margin-left: 0;
+        align-self: flex-end;
+    }
+    
+    .step-description {
+        font-size: 0.85rem;
+    }
+    
+    .algorithm-code {
+        font-size: 0.75rem;
+        padding: 0.75rem;
+    }
+    
+    .tips-section {
+        padding: 0.75rem;
+    }
+    
+    .tips-title {
+        font-size: 0.85rem;
+    }
+    
+    .tips-item {
+        font-size: 0.75rem;
+    }
+    
+    .traversal-panel {
+        padding: 1rem;
+    }
+    
+    .traversal-table {
+        font-size: 0.75rem;
+    }
+    
+    .traversal-table th,
+    .traversal-table td {
+        padding: 0.5rem;
+    }
+    
+    .traversal-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .traversal-result {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+    }
+    
+    .history-section {
+        padding: 1rem;
+    }
+    
+    .history-title {
+        font-size: 1.1rem;
+    }
+    
+    .history-list {
+        padding: 0.5rem;
+    }
+    
+    .history-item {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .history-operation {
+        font-size: 0.85rem;
+    }
+    
+    .history-value {
+        font-size: 0.75rem;
+    }
+    
+    .history-time {
+        font-size: 0.7rem;
+    }
+    
+    .toggle-container {
+        padding: 0.6rem;
+    }
+    
+    .speed-control {
+        padding: 0.6rem;
+    }
+    
+    .speed-control label {
+        font-size: 0.8rem;
+        min-width: 80px;
+    }
+    
+    .speed-value {
+        font-size: 0.8rem;
+        min-width: 50px;
+    }
+    
+    .zoom-controls {
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+    
+    .zoom-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+    
+    .node-tooltip {
+        min-width: 150px;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .tooltip-title {
+        font-size: 0.85rem;
+    }
+    
+    .tooltip-row {
+        font-size: 0.75rem;
+    }
+    
+    .complexity-table {
+        font-size: 0.75rem;
+    }
+    
+    .complexity-table th,
+    .complexity-table td {
+        padding: 0.4rem;
+    }
+    
+    .complexity-badge {
+        padding: 0.15rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .comparison-section {
+        padding: 1rem;
+    }
+    
+    .comparison-section h2 {
+        font-size: 1.3rem;
+    }
+    
+    .comparison-card {
+        padding: 1rem;
+    }
+    
+    .tree-type {
+        font-size: 1.1rem;
+    }
+    
+    .metric {
+        padding: 0.3rem 0;
+    }
+    
+    .metric-label {
+        font-size: 0.8rem;
+    }
+    
+    .metric-value {
+        font-size: 0.8rem;
+    }
+    
+    .placeholder-title {
+        font-size: 1.3rem;
+    }
+    
+    .placeholder-content {
+        font-size: 0.9rem;
+    }
+    
+    .placeholder-section-title {
+        font-size: 1rem;
+    }
+    
+    .toast {
+        font-size: 0.85rem;
+        padding: 0.6rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0.5rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .tree-container {
+        height: 200px;
+    }
+    
+    .legend {
+        gap: 0.3rem;
+        padding: 0.3rem;
+    }
+    
+    .legend-item {
+        font-size: 0.7rem;
+    }
+    
+    .legend-color {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .panel {
+        padding: 0.75rem;
+    }
+    
+    .panel-header {
+        font-size: 0.9rem;
+    }
+    
+    .controls {
+        gap: 0.4rem;
+    }
+    
+    button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.3rem;
+    }
+    
+    .stat-card {
+        padding: 0.4rem;
+    }
+    
+    .stat-value {
+        font-size: 1rem;
+    }
+    
+    .stat-label {
+        font-size: 0.65rem;
+    }
+    
+    .properties-grid {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+    }
+    
+    .property-card {
+        padding: 0.4rem;
+    }
+    
+    .property-number {
+        font-size: 1rem;
+    }
+    
+    .property-title {
+        font-size: 0.7rem;
+    }
+    
+    .property-description {
+        font-size: 0.6rem;
+    }
+    
+    .key-points {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+    }
+    
+    .key-point {
+        padding: 0.4rem;
+    }
+    
+    .key-point-icon {
+        font-size: 1rem;
+    }
+    
+    .key-point-text {
+        font-size: 0.65rem;
+    }
+    
+    .rules-list {
+        gap: 0.2rem;
+    }
+    
+    .rule-item {
+        padding: 0.3rem;
+    }
+    
+    .rule-number {
+        width: 16px;
+        height: 16px;
+        font-size: 0.6rem;
+    }
+    
+    .rule-title {
+        font-size: 0.65rem;
+    }
+    
+    .rule-description {
+        font-size: 0.55rem;
+        margin-left: 18px;
+    }
+    
+    .tutorial-step {
+        gap: 0.4rem;
+    }
+    
+    .step-number {
+        width: 18px;
+        height: 18px;
+        font-size: 0.65rem;
+    }
+    
+    .step-title {
+        font-size: 0.75rem;
+    }
+    
+    .step-description {
+        font-size: 0.65rem;
+    }
+    
+    .algorithm-display {
+        padding: 0.75rem;
+        min-height: 180px;
+    }
+    
+    .current-step {
+        font-size: 0.9rem;
+    }
+    
+    .step-description {
+        font-size: 0.8rem;
+    }
+    
+    .algorithm-code {
+        font-size: 0.7rem;
+        padding: 0.5rem;
+    }
+    
+    .tips-section {
+        padding: 0.5rem;
+    }
+    
+    .tips-title {
+        font-size: 0.8rem;
+    }
+    
+    .tips-item {
+        font-size: 0.7rem;
+    }
+    
+    .traversal-panel {
+        padding: 0.75rem;
+    }
+    
+    .traversal-table {
+        font-size: 0.7rem;
+    }
+    
+    .traversal-table th,
+    .traversal-table td {
+        padding: 0.4rem;
+    }
+    
+    .traversal-btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .traversal-result {
+        font-size: 0.65rem;
+        padding: 0.3rem;
+    }
+    
+    .history-section {
+        padding: 0.75rem;
+    }
+    
+    .history-title {
+        font-size: 1rem;
+    }
+    
+    .history-list {
+        padding: 0.4rem;
+    }
+    
+    .history-item {
+        padding: 0.4rem;
+        font-size: 0.75rem;
+    }
+    
+    .history-operation {
+        font-size: 0.8rem;
+    }
+    
+    .history-value {
+        font-size: 0.7rem;
+    }
+    
+    .history-time {
+        font-size: 0.65rem;
+    }
+    
+    .toggle-container {
+        padding: 0.5rem;
+    }
+    
+    .speed-control {
+        padding: 0.5rem;
+    }
+    
+    .speed-control label {
+        font-size: 0.75rem;
+        min-width: 70px;
+    }
+    
+    .speed-value {
+        font-size: 0.75rem;
+        min-width: 45px;
+    }
+    
+    .zoom-controls {
+        top: 0.3rem;
+        right: 0.3rem;
+    }
+    
+    .zoom-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.9rem;
+    }
+    
+    .node-tooltip {
+        min-width: 140px;
+        padding: 0.4rem;
+        font-size: 0.7rem;
+    }
+    
+    .tooltip-title {
+        font-size: 0.8rem;
+    }
+    
+    .tooltip-row {
+        font-size: 0.7rem;
+    }
+    
+    .complexity-table {
+        font-size: 0.7rem;
+    }
+    
+    .complexity-table th,
+    .complexity-table td {
+        padding: 0.3rem;
+    }
+    
+    .complexity-badge {
+        padding: 0.1rem 0.4rem;
+        font-size: 0.65rem;
+    }
+    
+    .comparison-section {
+        padding: 0.75rem;
+    }
+    
+    .comparison-section h2 {
+        font-size: 1.2rem;
+    }
+    
+    .comparison-card {
+        padding: 0.75rem;
+    }
+    
+    .tree-type {
+        font-size: 1rem;
+    }
+    
+    .metric {
+        padding: 0.2rem 0;
+    }
+    
+    .metric-label {
+        font-size: 0.75rem;
+    }
+    
+    .metric-value {
+        font-size: 0.75rem;
+    }
+    
+    .placeholder-title {
+        font-size: 1.2rem;
+    }
+    
+    .placeholder-content {
+        font-size: 0.85rem;
+    }
+    
+    .placeholder-section-title {
+        font-size: 0.9rem;
+    }
+    
+    .toast {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.8rem;
+    }
+}
+
+/* Touch-friendly adjustments for mobile */
+@media (hover: none) and (pointer: coarse) {
+    .node:hover {
+        filter: none;
+    }
+    
+    .node:active {
+        filter: brightness(1.2);
+    }
+    
+    .property-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .property-card:active {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .key-point:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .key-point:active {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .rule-item:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .rule-item:active {
+        transform: translateX(5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .comparison-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .comparison-card:active {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .history-item:hover {
+        transform: none;
+        box-shadow: none;
+    }
+    
+    .history-item:active {
+        transform: translateX(3px);
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    .traversal-btn:hover {
+        background: var(--bg-dark);
+        border-color: var(--border);
+        color: var(--text-primary);
+    }
+    
+    .traversal-btn:active {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: white;
+    }
+    
+    .tree-type-btn:hover:not(.active) {
+        background: var(--border);
+        color: var(--text-secondary);
+    }
+    
+    .tree-type-btn:active:not(.active) {
+        background: rgba(59, 130, 246, 0.2);
+        color: var(--text-primary);
+    }
+    
+    .zoom-btn:hover {
+        background: var(--bg-dark);
+        border-color: var(--border);
+        color: var(--text-primary);
+    }
+    
+    .zoom-btn:active {
+        background: var(--accent);
+        border-color: var(--accent);
+    }
 }

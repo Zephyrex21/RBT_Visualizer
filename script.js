@@ -970,7 +970,11 @@ function drawTree() {
     const height = svg.clientHeight;
     const nodeRadius = 25;
     
-    const positions = calculateNodePositions(root, width / 2, 50, width / 4);
+    // Adjust node size for mobile
+    const isMobile = window.innerWidth <= 768;
+    const adjustedNodeRadius = isMobile ? 20 : nodeRadius;
+    
+    const positions = calculateNodePositions(root, width / 2, 50, width / 4, adjustedNodeRadius);
     
     // Draw edges
     positions.forEach(pos => {
@@ -1038,7 +1042,7 @@ function drawTree() {
         g.setAttribute('data-value', pos.node.value);
         
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('r', nodeRadius);
+        circle.setAttribute('r', adjustedNodeRadius);
         circle.setAttribute('class', 'node-circle');
         
         if (currentTreeType === 'rb') {
@@ -1055,6 +1059,11 @@ function drawTree() {
         text.setAttribute('dy', '5');
         text.textContent = pos.node.value;
         
+        // Adjust text size for mobile
+        if (isMobile) {
+            text.setAttribute('font-size', '12px');
+        }
+        
         g.appendChild(circle);
         g.appendChild(text);
         
@@ -1068,6 +1077,14 @@ function drawTree() {
             balanceText.setAttribute('font-size', '12');
             balanceText.setAttribute('font-weight', 'bold');
             balanceText.textContent = balance;
+            
+            // Adjust balance factor position for mobile
+            if (isMobile) {
+                balanceText.setAttribute('x', '15');
+                balanceText.setAttribute('y', '-8');
+                balanceText.setAttribute('font-size', '10');
+            }
+            
             g.appendChild(balanceText);
         }
         
@@ -1118,19 +1135,24 @@ function drawNilNode(svg, x, y) {
     svg.appendChild(g);
 }
 
-function calculateNodePositions(node, x, y, horizontalSpacing) {
+function calculateNodePositions(node, x, y, horizontalSpacing, nodeRadius = 25) {
     if (currentTreeType === 'rb' && node === rbTree.NIL) return [];
     if (currentTreeType === 'avl' && node === null) return [];
     
     const positions = [{ node, x, y }];
+    
+    // Adjust vertical spacing for mobile
+    const isMobile = window.innerWidth <= 768;
+    const verticalSpacing = isMobile ? 60 : 80;
     
     if (currentTreeType === 'rb') {
         if (node.left !== rbTree.NIL) {
             const leftPositions = calculateNodePositions(
                 node.left,
                 x - horizontalSpacing,
-                y + 80,
-                horizontalSpacing / 2
+                y + verticalSpacing,
+                horizontalSpacing / 2,
+                nodeRadius
             );
             positions.push(...leftPositions);
         }
@@ -1139,8 +1161,9 @@ function calculateNodePositions(node, x, y, horizontalSpacing) {
             const rightPositions = calculateNodePositions(
                 node.right,
                 x + horizontalSpacing,
-                y + 80,
-                horizontalSpacing / 2
+                y + verticalSpacing,
+                horizontalSpacing / 2,
+                nodeRadius
             );
             positions.push(...rightPositions);
         }
@@ -1149,8 +1172,9 @@ function calculateNodePositions(node, x, y, horizontalSpacing) {
             const leftPositions = calculateNodePositions(
                 node.left,
                 x - horizontalSpacing,
-                y + 80,
-                horizontalSpacing / 2
+                y + verticalSpacing,
+                horizontalSpacing / 2,
+                nodeRadius
             );
             positions.push(...leftPositions);
         }
@@ -1159,8 +1183,9 @@ function calculateNodePositions(node, x, y, horizontalSpacing) {
             const rightPositions = calculateNodePositions(
                 node.right,
                 x + horizontalSpacing,
-                y + 80,
-                horizontalSpacing / 2
+                y + verticalSpacing,
+                horizontalSpacing / 2,
+                nodeRadius
             );
             positions.push(...rightPositions);
         }
@@ -1703,6 +1728,48 @@ function setupZoomAndPan() {
         isDragging = false;
         container.classList.remove('grabbing');
     });
+    
+    // Touch events for mobile
+    let touchStartDistance = 0;
+    let touchStartZoom = 1;
+    
+    container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+            isDragging = true;
+            dragStartX = e.touches[0].clientX - panX;
+            dragStartY = e.touches[0].clientY - panY;
+        } else if (e.touches.length === 2) {
+            isDragging = false;
+            touchStartDistance = Math.hypot(
+                e.touches[0].clientX - e.touches[1].clientX,
+                e.touches[0].clientY - e.touches[1].clientY
+            );
+            touchStartZoom = zoomLevel;
+        }
+    });
+    
+    container.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        
+        if (e.touches.length === 1 && isDragging) {
+            panX = e.touches[0].clientX - dragStartX;
+            panY = e.touches[0].clientY - dragStartY;
+            updateTransform();
+        } else if (e.touches.length === 2) {
+            const currentDistance = Math.hypot(
+                e.touches[0].clientX - e.touches[1].clientX,
+                e.touches[0].clientY - e.touches[1].clientY
+            );
+            
+            const scale = currentDistance / touchStartDistance;
+            zoomLevel = Math.max(0.5, Math.min(3, touchStartZoom * scale));
+            updateTransform();
+        }
+    });
+    
+    container.addEventListener('touchend', () => {
+        isDragging = false;
+    });
 }
 
 // Save/Load functionality
@@ -1887,29 +1954,34 @@ function showNodeTooltip(event, node, nodeX, nodeY) {
     const tooltipWidth = 180; // Approximate width of tooltip
     const tooltipHeight = 150; // Approximate height of tooltip
     
+    // Adjust tooltip size for mobile
+    const isMobile = window.innerWidth <= 768;
+    const adjustedTooltipWidth = isMobile ? 150 : tooltipWidth;
+    const adjustedTooltipHeight = isMobile ? 120 : tooltipHeight;
+    
     // Determine best position based on available space
     let tooltipX, tooltipY;
     
     // Default position: to the right of the node
     tooltipX = nodeX + 35;
-    tooltipY = nodeY - tooltipHeight / 2;
+    tooltipY = nodeY - adjustedTooltipHeight / 2;
     
     // Check if tooltip would go outside the container on the right
-    if (nodeX + tooltipWidth + 35 > containerRect.width) {
+    if (nodeX + adjustedTooltipWidth + 35 > containerRect.width) {
         // Position to the left instead
-        tooltipX = nodeX - tooltipWidth - 35;
+        tooltipX = nodeX - adjustedTooltipWidth - 35;
     }
     
     // Check if tooltip would go outside the container on the top
-    if (nodeY - tooltipHeight / 2 < 0) {
+    if (nodeY - adjustedTooltipHeight / 2 < 0) {
         // Position below the node instead
         tooltipY = nodeY + 35;
     }
     
     // Check if tooltip would go outside the container on the bottom
-    if (nodeY + tooltipHeight / 2 > containerRect.height) {
+    if (nodeY + adjustedTooltipHeight / 2 > containerRect.height) {
         // Position above the node instead
-        tooltipY = nodeY - tooltipHeight - 35;
+        tooltipY = nodeY - adjustedTooltipHeight - 35;
     }
     
     tooltip.style.left = `${tooltipX}px`;

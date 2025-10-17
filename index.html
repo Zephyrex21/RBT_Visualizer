@@ -6,9 +6,6 @@
     <title>Red Blackify | Interactive Learning Tool</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -35,11 +32,8 @@
         </header>
 
         <div class="main-layout">
-
             <div class="visualization-panel">
-
                 <div class="tree-container" id="treeContainer" role="img" aria-label="Tree visualization">
-
                     <!-- Tree placeholder with historical information -->
                     <div class="tree-placeholder" id="treePlaceholder">
                         <div class="placeholder-title">Red-Black Tree</div>
@@ -91,9 +85,7 @@
                         <button class="zoom-btn" onclick="zoomOut()" aria-label="Zoom out">−</button>
                         <button class="zoom-btn" onclick="resetZoom()" aria-label="Reset zoom">⟲</button>
                     </div>
-
                 </div>
-
                 <div class="legend">
                     <div class="legend-item">
                         <div class="legend-color red"></div>
@@ -168,7 +160,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <div class="right-panel">
@@ -294,17 +285,13 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <div class="bottom-sections">
-
             <div class="small-panel">
-
                 <div class="panel-header">
                     <span>📖</span> Tree Properties
                 </div>
-
                 <div class="properties-grid">
                     <div class="property-card">
                         <div class="property-number" id="prop1">5</div>
@@ -337,27 +324,21 @@
                         <div class="property-description">Left & right only</div>
                     </div>
                 </div>
-
             </div>
 
             <div class="small-panel">
-
                 <div class="panel-header">
                     <span id="rulesTitle">📋</span> <span id="rulesTitleText">Red-Black Tree Rules</span>
                 </div>
-
                 <div class="rules-list" id="rulesList">
                     <!-- Rules will be dynamically inserted here -->
                 </div>
-
             </div>
 
             <div class="small-panel">
-
                 <div class="panel-header">
                     <span>🎓</span> Tutorial
                 </div>
-
                 <div class="tutorial-section">
                     <div class="tutorial-step">
                         <div class="step-number">1</div>
@@ -388,19 +369,14 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
         <div class="panel" style="margin-bottom: 1.5rem;">
-
             <div class="panel-header">
                 <span>⚡</span> Performance & Complexity
             </div>
-
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-
                 <div>
                     <div class="info-title" style="margin-bottom: 0.75rem;">
                         <span>📊</span> Time Complexity
@@ -417,32 +393,31 @@
                         <tbody>
                             <tr>
                                 <td>Search</td>
-                                <td><span class="complexity-badge best">O(1)</span></td>
+                                <td><span class="complexity-badge best">O(log n)</span></td>
                                 <td><span class="complexity-badge average">O(log n)</span></td>
                                 <td><span class="complexity-badge worst">O(log n)</span></td>
                             </tr>
                             <tr>
                                 <td>Insert</td>
-                                <td><span class="complexity-badge best">O(1)</span></td>
+                                <td><span class="complexity-badge best">O(log n)</span></td>
                                 <td><span class="complexity-badge average">O(log n)</span></td>
                                 <td><span class="complexity-badge worst">O(log n)</span></td>
                             </tr>
                             <tr>
                                 <td>Delete</td>
-                                <td><span class="complexity-badge best">O(1)</span></td>
+                                <td><span class="complexity-badge best">O(log n)</span></td>
                                 <td><span class="complexity-badge average">O(log n)</span></td>
                                 <td><span class="complexity-badge worst">O(log n)</span></td>
                             </tr>
                             <tr>
-                                <td>Rotation</td>
-                                <td><span class="complexity-badge best">O(1)</span></td>
-                                <td><span class="complexity-badge average">O(1)</span></td>
+                                <td>Min/Max</td>
+                                <td><span class="complexity-badge best">O(log n)</span></td>
+                                <td><span class="complexity-badge average">O(log n)</span></td>
                                 <td><span class="complexity-badge worst">O(log n)</span></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-
                 <div>
                     <div class="info-title" style="margin-bottom: 0.75rem;">
                         <span>💾</span> Space Complexity
@@ -464,16 +439,16 @@
                                 <td><span class="complexity-badge worst">O(n)</span></td>
                             </tr>
                             <tr>
-                                <td>Color Bit </td>
-                                <td><span class="complexity-badge best">O(n)</span></td>
-                                <td><span class="complexity-badge average">O(n)</span></td>
-                                <td><span class="complexity-badge worst">O(n)</span></td>
+                                <td>Color Bit</td>
+                                <td><span class="complexity-badge best">O(1)</span></td>
+                                <td><span class="complexity-badge average">O(1)</span></td>
+                                <td><span class="complexity-badge worst">O(1)</span></td>
                             </tr>
                             <tr>
                                 <td>Pointers</td>
-                                <td><span class="complexity-badge best">O(n)</span></td>
-                                <td><span class="complexity-badge average">O(n)</span></td>
-                                <td><span class="complexity-badge worst">O(n)</span></td>
+                                <td><span class="complexity-badge best">O(1)</span></td>
+                                <td><span class="complexity-badge average">O(1)</span></td>
+                                <td><span class="complexity-badge worst">O(1)</span></td>
                             </tr>
                             <tr>
                                 <td>Total</td>
@@ -484,16 +459,11 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
-
         </div>
 
         <div class="comparison-section">
-
-            <h2 style="text-align: center; margin-bottom: 1rem; color: var(--accent); font-size: 1.5rem;">Red-Black Tree vs AVL Tree
-            </h2>
-
+            <h2 style="text-align: center; margin-bottom: 1rem; color: var(--accent); font-size: 1.5rem;">Red-Black Tree vs AVL Tree</h2>
             <div class="comparison-grid">
                 <div class="comparison-card">
                     <div class="tree-type rb-tree">Red-Black Tree</div>
@@ -591,16 +561,12 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
     </div>
 
-    <div class="toast" id="toast">
-    </div>
+    <div class="toast" id="toast"></div>
 
-    <script src="script.js">
-    </script>
-    
+    <script src="script.js"></script>
 </body>
 </html>
