@@ -1,100 +1,106 @@
-🧮 README.md Template for RBT Visualizer
 # 🌳 Red-Black Tree Visualizer
 
 A web-based **Red-Black Tree Visualizer** built using **HTML, CSS, and JavaScript**.  
-It helps visualize how insertion and balancing work in Red-Black Trees — one of the most important self-balancing binary search trees in computer science.
+This project helps visualize how **insertion**, **color flipping**, and **rotations** work in a Red-Black Tree — one of the most important self-balancing binary search trees in computer science.
 
 ---
 
-## 🚀 Features
+## 🚀 Live Demo
 
-- 🧩 **Insert nodes dynamically** into the tree  
-- 🔄 **Automatic color balancing & rotations** visualization  
-- 🎨 Clean, interactive, and responsive UI  
-- 🧠 Educational tool for understanding tree balancing algorithms  
-- ⚡ Instant visual feedback for every operation  
+🔗 **Try it here:** [Red-Black Tree Visualizer on Netlify](https://your-site-name.netlify.app)
+
+*(Replace the above link with your actual Netlify URL once deployed)*
+
+---
+
+## 🧩 Features
+
+- 🧠 **Dynamic Node Insertion** — visualize new nodes in real-time  
+- 🔴⚫ **Color Balancing & Rotations** — automatic balancing after each insert  
+- 🎨 **Interactive UI** — clean, minimal, and responsive design  
+- 🪶 **Instant Visual Feedback** — see how every operation affects the tree  
+- 📚 **Educational Tool** — great for learning self-balancing trees
 
 ---
 
 ## 🧰 Tech Stack
 
-- **HTML5** — structure  
-- **CSS3** — styling & layout  
-- **JavaScript (ES6)** — logic and tree visualization  
-- *(Optional)* — D3.js or Canvas (if you used for drawing nodes)
+| Layer | Technology |
+|--------|-------------|
+| 💻 Frontend | HTML5, CSS3, JavaScript (ES6) |
+| 🎨 Styling | Custom CSS (no framework) |
+| 🧩 Visualization | Canvas / DOM manipulation |
 
 ---
 
-## 🖥️ How to Run
+## 🖥️ How to Run Locally
 
-1. **Clone the repository**
+1. **Clone this repository**
    ```bash
-   https://github.com/inferno2136/RBT_Visualizer.git
+   git clone https://github.com/<your-username>/RBT-Visualizer.git
+   ```
 
+2. **Navigate to the project folder**
+   ```bash
+   cd RBT-Visualizer
+   ```
 
-Navigate to the folder
-
-cd RBT-Visualizer
-
-
-Open the project
-Just open index.html in any web browser.
-
-💡 No extra setup or installation required!
-
-📸 Preview
-Insertion Example	Balanced Tree Example
-(Add screenshot here)	(Add another screenshot here)
-
-You can add screenshots later by uploading them to your repo’s assets folder and linking here.
-
-🧠 Learn About Red-Black Trees
-
-A Red-Black Tree is a type of self-balancing Binary Search Tree (BST) that ensures the tree height remains approximately O(log n) after every insertion and deletion.
-
-Key Properties:
-
-Every node is either Red or Black
-
-The root is always Black
-
-Every leaf (NULL) is considered Black
-
-If a node is Red, its children are Black
-
-Every path from root to leaf has the same number of black nodes
-
-🛠️ Future Improvements
-
-🔧 Node deletion visualization
-
-⏩ Step-by-step animation controls (Next / Back)
-
-🌈 Color themes (Dark mode / Light mode)
-
-📱 Better mobile responsiveness
-
-👨‍💻 Author
-
-Saurabh Raj Shekhar
-📚 B.Tech CSE (Data Science), NSUT Dwarka
-💬 "Building interactive tools to visualize algorithms and make learning fun!"
-🔗 GitHub Profile
-
-📄 License
-
-This project is open-source and available under the MIT License
-.
-
+3. **Run the app**
+   Simply open `index.html` in your favorite web browser.  
+   *(No installations or dependencies needed!)*
 
 ---
 
-### 🪄 Optional Enhancements
-- Add a `preview.gif` showing a short demo (you can record using **ScreenToGif** or **OBS**).
-- Add your **GitHub Pages link** once you deploy it — e.g.  
-  `https://<your-username>.github.io/RBT-Visualizer/`
+## 📸 Preview
+
+| Insertion Example | Balanced Tree Example |
+|--------------------|------------------------|
+| *(Add screenshot here)* | *(Add another screenshot here)* |
+
+> You can add screenshots later by uploading them to the repo and replacing these placeholders.
 
 ---
 
-Would you like me to **customize this README** with your actual GitHub username and details (like project name, description, and your social links)?  
-I can make a **ready-to-upload version** for you.
+## 🧠 About Red-Black Trees
+
+A **Red-Black Tree (RBT)** is a type of **self-balancing binary search tree** that ensures the height of the tree remains approximately `O(log n)` after each operation, allowing for efficient searching, insertion, and deletion.
+
+### 🔑 Key Properties:
+1. Every node is either **Red** or **Black**  
+2. The **root** is always **Black**  
+3. Every **leaf (NULL)** is considered **Black**  
+4. A **Red** node cannot have a **Red** child  
+5. Every path from the root to a leaf has the **same number of black nodes**
+
+---
+
+## 🛠️ Future Enhancements
+
+- 🧩 Node **deletion** visualization  
+- ⏸️ Step-by-step **animation controls**  
+- 🌈 **Dark / Light mode** toggle  
+- 📱 Improved **mobile responsiveness**  
+- 🧾 Option to **export tree structure** as JSON
+
+---
+
+## 👨‍💻 Author
+
+**Saurabh Raj Shekhar (Zephyr)**  
+🎓 B.Tech CSE (Data Science), NSUT Dwarka  
+💬 “Building interactive tools to visualize algorithms and make learning fun.”  
+
+🔗 [GitHub Profile](https://github.com/<your-username>)  
+📸 Nature Photographer & Poet 🌿  
+
+---
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
+
+## ⭐ Support
+
+If you like this project, consider giving it a ⭐ on GitHub — it helps others discover it and motivates me to build more interactive visual tools!
