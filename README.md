@@ -51,10 +51,10 @@ This project helps visualize how **insertion**, **color flipping**, and **rotati
 
 ## 📸 Preview
 
-| Insertion Example | 
+| Web Page Preview | 
 ![Insertion Demo](assets/insert-demo.png)
 
-| TreeExample | 
+| Tree Example | 
 ![Insertion Demo](assets/tree-demo.png)
 
 
