@@ -51,9 +51,13 @@ This project helps visualize how **insertion**, **color flipping**, and **rotati
 
 ## 📸 Preview
 
-| Insertion Example | Balanced Tree Example |
-|--------------------|------------------------|
-| *(Add screenshot here)* | *(Add another screenshot here)* |
+| Insertion Example | 
+![Insertion Demo](assets/insert-demo.png)
+
+| TreeExample | 
+![Insertion Demo](assets/tree-demo.png)
+
+
 
 
 ---
