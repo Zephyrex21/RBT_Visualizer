@@ -9,8 +9,51 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS will be included in the CSS file */
+    </style>
 </head>
 <body>
+
+    <!-- Mobile Menu -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="mobile-menu-title">Menu</div>
+            <button class="mobile-menu-close" id="mobileMenuClose">×</button>
+        </div>
+        
+        <div class="mobile-menu-section">
+            <div class="mobile-menu-section-title">Tree Operations</div>
+            <button class="mobile-menu-button" onclick="showMobileControls()">Controls</button>
+            <button class="mobile-menu-button secondary" onclick="generateRandom()">Generate Random</button>
+            <button class="mobile-menu-button danger" onclick="clearTree()">Clear Tree</button>
+        </div>
+        
+        <div class="mobile-menu-section">
+            <div class="mobile-menu-section-title">Tree Type</div>
+            <button class="mobile-menu-button" onclick="switchTreeType('rb')">Red-Black Tree</button>
+            <button class="mobile-menu-button" onclick="switchTreeType('avl')">AVL Tree</button>
+        </div>
+        
+        <div class="mobile-menu-section">
+            <div class="mobile-menu-section-title">Options</div>
+            <button class="mobile-menu-button" onclick="toggleNullLeaves()">Toggle Null Leaves</button>
+            <button class="mobile-menu-button" onclick="document.body.classList.toggle('light-mode')">Toggle Theme</button>
+        </div>
+        
+        <div class="mobile-menu-section">
+            <div class="mobile-menu-section-title">Navigation</div>
+            <a href="#visualization" class="mobile-menu-item">Visualization</a>
+            <a href="#traversal" class="mobile-menu-item">Traversals</a>
+            <a href="#history" class="mobile-menu-item">History</a>
+            <a href="#properties" class="mobile-menu-item">Properties</a>
+            <a href="#rules" class="mobile-menu-item">Rules</a>
+            <a href="#tutorial" class="mobile-menu-item">Tutorial</a>
+            <a href="#comparison" class="mobile-menu-item">Comparison</a>
+        </div>
+    </div>
 
     <div class="container">
 
@@ -35,7 +78,7 @@
         </header>
 
         <div class="main-layout">
-            <div class="visualization-panel">
+            <div class="visualization-panel" id="visualization">
                 <div class="tree-container" id="treeContainer" role="img" aria-label="Tree visualization">
                     <!-- Tree placeholder with historical information -->
                     <div class="tree-placeholder" id="treePlaceholder">
@@ -108,7 +151,7 @@
                     </div>
                 </div>
                 
-                <div class="traversal-panel">
+                <div class="traversal-panel" id="traversal">
                     <div class="panel-header">
                         <span>🔍</span> Traversals
                     </div>
@@ -152,7 +195,7 @@
                     </table>
                 </div>
                 
-                <div class="history-section">
+                <div class="history-section" id="history">
                     <div class="history-title">
                         <span>📜 Operation History</span>
                         <button onclick="clearHistory()" class="danger" style="padding: 0.4rem 0.8rem; font-size: 0.8rem;">Clear</button>
@@ -291,7 +334,7 @@
         </div>
 
         <div class="bottom-sections">
-            <div class="small-panel">
+            <div class="small-panel" id="properties">
                 <div class="panel-header">
                     <span>📖</span> Tree Properties
                 </div>
@@ -329,7 +372,7 @@
                 </div>
             </div>
 
-            <div class="small-panel">
+            <div class="small-panel" id="rules">
                 <div class="panel-header">
                     <span id="rulesTitle">📋</span> <span id="rulesTitleText">Red-Black Tree Rules</span>
                 </div>
@@ -338,7 +381,7 @@
                 </div>
             </div>
 
-            <div class="small-panel">
+            <div class="small-panel" id="tutorial">
                 <div class="panel-header">
                     <span>🎓</span> Tutorial
                 </div>
@@ -379,7 +422,7 @@
             <div class="panel-header">
                 <span>⚡</span> Performance & Complexity
             </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="complexity-container">
                 <div>
                     <div class="info-title" style="margin-bottom: 0.75rem;">
                         <span>📊</span> Time Complexity
@@ -465,7 +508,7 @@
             </div>
         </div>
 
-        <div class="comparison-section">
+        <div class="comparison-section" id="comparison">
             <h2 style="text-align: center; margin-bottom: 1rem; color: var(--accent); font-size: 1.5rem;">Red-Black Tree vs AVL Tree</h2>
             <div class="comparison-grid">
                 <div class="comparison-card">
@@ -565,6 +608,9 @@
                 </div>
             </div>
         </div>
+
+        <!-- Mobile Controls Button -->
+        <button class="mobile-controls-button" id="mobileControlsBtn">Show Controls</button>
 
     </div>
 

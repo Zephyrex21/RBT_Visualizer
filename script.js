@@ -968,13 +968,26 @@ function drawTree() {
     
     const width = svg.clientWidth;
     const height = svg.clientHeight;
-    const nodeRadius = 25;
     
-    // Adjust node size for mobile
+    // Adjust node size and spacing based on screen size
     const isMobile = window.innerWidth <= 768;
-    const adjustedNodeRadius = isMobile ? 20 : nodeRadius;
+    const isSmallMobile = window.innerWidth <= 480;
     
-    const positions = calculateNodePositions(root, width / 2, 50, width / 4, adjustedNodeRadius);
+    let nodeRadius = 25;
+    let verticalSpacing = 80;
+    let minHorizontalSpacing = 40;
+    
+    if (isSmallMobile) {
+        nodeRadius = 15;
+        verticalSpacing = 50;
+        minHorizontalSpacing = 25;
+    } else if (isMobile) {
+        nodeRadius = 20;
+        verticalSpacing = 60;
+        minHorizontalSpacing = 30;
+    }
+    
+    const positions = calculateNodePositions(root, width / 2, 50, width / 4, nodeRadius, minHorizontalSpacing);
     
     // Draw edges
     positions.forEach(pos => {
@@ -985,8 +998,8 @@ function drawTree() {
                     drawEdge(svg, pos.x, pos.y, leftPos.x, leftPos.y);
                 }
             } else if (showNullLeaves) {
-                const nilX = pos.x - 30;
-                const nilY = pos.y + 60;
+                const nilX = pos.x - (isSmallMobile ? 20 : 30);
+                const nilY = pos.y + (isSmallMobile ? 40 : 60);
                 drawEdge(svg, pos.x, pos.y, nilX, nilY, 0.3);
             }
             
@@ -996,8 +1009,8 @@ function drawTree() {
                     drawEdge(svg, pos.x, pos.y, rightPos.x, rightPos.y);
                 }
             } else if (showNullLeaves) {
-                const nilX = pos.x + 30;
-                const nilY = pos.y + 60;
+                const nilX = pos.x + (isSmallMobile ? 20 : 30);
+                const nilY = pos.y + (isSmallMobile ? 40 : 60);
                 drawEdge(svg, pos.x, pos.y, nilX, nilY, 0.3);
             }
         } else {
@@ -1021,15 +1034,15 @@ function drawTree() {
     if (showNullLeaves && currentTreeType === 'rb') {
         positions.forEach(pos => {
             if (pos.node.left === tree.NIL) {
-                const nilX = pos.x - 30;
-                const nilY = pos.y + 60;
-                drawNilNode(svg, nilX, nilY);
+                const nilX = pos.x - (isSmallMobile ? 20 : 30);
+                const nilY = pos.y + (isSmallMobile ? 40 : 60);
+                drawNilNode(svg, nilX, nilY, isSmallMobile ? 10 : 15);
             }
             
             if (pos.node.right === tree.NIL) {
-                const nilX = pos.x + 30;
-                const nilY = pos.y + 60;
-                drawNilNode(svg, nilX, nilY);
+                const nilX = pos.x + (isSmallMobile ? 20 : 30);
+                const nilY = pos.y + (isSmallMobile ? 40 : 60);
+                drawNilNode(svg, nilX, nilY, isSmallMobile ? 10 : 15);
             }
         });
     }
@@ -1042,7 +1055,7 @@ function drawTree() {
         g.setAttribute('data-value', pos.node.value);
         
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        circle.setAttribute('r', adjustedNodeRadius);
+        circle.setAttribute('r', nodeRadius);
         circle.setAttribute('class', 'node-circle');
         
         if (currentTreeType === 'rb') {
@@ -1056,11 +1069,13 @@ function drawTree() {
         const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         text.setAttribute('class', 'node-text');
         text.setAttribute('text-anchor', 'middle');
-        text.setAttribute('dy', '5');
+        text.setAttribute('dy', isSmallMobile ? '3' : '5');
         text.textContent = pos.node.value;
         
         // Adjust text size for mobile
-        if (isMobile) {
+        if (isSmallMobile) {
+            text.setAttribute('font-size', '10px');
+        } else if (isMobile) {
             text.setAttribute('font-size', '12px');
         }
         
@@ -1071,20 +1086,12 @@ function drawTree() {
         if (currentTreeType === 'avl') {
             const balance = tree.getBalance(pos.node);
             const balanceText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            balanceText.setAttribute('x', '20');
-            balanceText.setAttribute('y', '-10');
+            balanceText.setAttribute('x', isSmallMobile ? '12' : '20');
+            balanceText.setAttribute('y', isSmallMobile ? '-8' : '-10');
             balanceText.setAttribute('fill', '#10b981');
-            balanceText.setAttribute('font-size', '12');
+            balanceText.setAttribute('font-size', isSmallMobile ? '8' : '12');
             balanceText.setAttribute('font-weight', 'bold');
             balanceText.textContent = balance;
-            
-            // Adjust balance factor position for mobile
-            if (isMobile) {
-                balanceText.setAttribute('x', '15');
-                balanceText.setAttribute('y', '-8');
-                balanceText.setAttribute('font-size', '10');
-            }
-            
             g.appendChild(balanceText);
         }
         
@@ -1116,18 +1123,19 @@ function drawEdge(svg, x1, y1, x2, y2, opacity = 0.6) {
     svg.appendChild(edge);
 }
 
-function drawNilNode(svg, x, y) {
+function drawNilNode(svg, x, y, radius = 15) {
     const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
     g.setAttribute('transform', `translate(${x}, ${y})`);
     
     const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('r', 15);
+    circle.setAttribute('r', radius);
     circle.setAttribute('class', 'nil-node');
     
     const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
     text.setAttribute('class', 'nil-text');
     text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('dy', '4');
+    text.setAttribute('dy', radius < 15 ? '3' : '4');
+    text.setAttribute('font-size', radius < 15 ? '8' : '12');
     text.textContent = 'NIL';
     
     g.appendChild(circle);
@@ -1135,7 +1143,7 @@ function drawNilNode(svg, x, y) {
     svg.appendChild(g);
 }
 
-function calculateNodePositions(node, x, y, horizontalSpacing, nodeRadius = 25) {
+function calculateNodePositions(node, x, y, horizontalSpacing, nodeRadius = 25, minHorizontalSpacing = 40) {
     if (currentTreeType === 'rb' && node === rbTree.NIL) return [];
     if (currentTreeType === 'avl' && node === null) return [];
     
@@ -1143,7 +1151,17 @@ function calculateNodePositions(node, x, y, horizontalSpacing, nodeRadius = 25) 
     
     // Adjust vertical spacing for mobile
     const isMobile = window.innerWidth <= 768;
-    const verticalSpacing = isMobile ? 60 : 80;
+    const isSmallMobile = window.innerWidth <= 480;
+    
+    let verticalSpacing = 80;
+    if (isSmallMobile) {
+        verticalSpacing = 50;
+    } else if (isMobile) {
+        verticalSpacing = 60;
+    }
+    
+    // Ensure minimum horizontal spacing
+    horizontalSpacing = Math.max(horizontalSpacing, minHorizontalSpacing);
     
     if (currentTreeType === 'rb') {
         if (node.left !== rbTree.NIL) {
@@ -1152,7 +1170,8 @@ function calculateNodePositions(node, x, y, horizontalSpacing, nodeRadius = 25) 
                 x - horizontalSpacing,
                 y + verticalSpacing,
                 horizontalSpacing / 2,
-                nodeRadius
+                nodeRadius,
+                minHorizontalSpacing
             );
             positions.push(...leftPositions);
         }
@@ -1163,7 +1182,8 @@ function calculateNodePositions(node, x, y, horizontalSpacing, nodeRadius = 25) 
                 x + horizontalSpacing,
                 y + verticalSpacing,
                 horizontalSpacing / 2,
-                nodeRadius
+                nodeRadius,
+                minHorizontalSpacing
             );
             positions.push(...rightPositions);
         }
@@ -1174,7 +1194,8 @@ function calculateNodePositions(node, x, y, horizontalSpacing, nodeRadius = 25) 
                 x - horizontalSpacing,
                 y + verticalSpacing,
                 horizontalSpacing / 2,
-                nodeRadius
+                nodeRadius,
+                minHorizontalSpacing
             );
             positions.push(...leftPositions);
         }
@@ -1185,7 +1206,8 @@ function calculateNodePositions(node, x, y, horizontalSpacing, nodeRadius = 25) 
                 x + horizontalSpacing,
                 y + verticalSpacing,
                 horizontalSpacing / 2,
-                nodeRadius
+                nodeRadius,
+                minHorizontalSpacing
             );
             positions.push(...rightPositions);
         }
@@ -2057,9 +2079,77 @@ function initThemeToggle() {
     });
 }
 
+// Mobile menu functionality
+function initMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenuClose = document.getElementById('mobileMenuClose');
+    const mobileControlsBtn = document.getElementById('mobileControlsBtn');
+    const rightPanel = document.querySelector('.right-panel');
+    
+    // Open mobile menu
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenuOverlay.classList.add('active');
+        mobileMenu.classList.add('active');
+    });
+    
+    // Close mobile menu
+    function closeMobileMenu() {
+        mobileMenuOverlay.classList.remove('active');
+        mobileMenu.classList.remove('active');
+    }
+    
+    mobileMenuClose.addEventListener('click', closeMobileMenu);
+    mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+    
+    // Show controls panel
+    function showMobileControls() {
+        rightPanel.classList.add('mobile-visible');
+        closeMobileMenu();
+        
+        // Add close button to controls panel
+        if (!document.getElementById('mobilePanelClose')) {
+            const panelHeader = document.createElement('div');
+            panelHeader.className = 'mobile-panel-header';
+            panelHeader.innerHTML = `
+                <div class="mobile-panel-title">Controls</div>
+                <button class="mobile-panel-close" id="mobilePanelClose">×</button>
+            `;
+            rightPanel.insertBefore(panelHeader, rightPanel.firstChild);
+            
+            document.getElementById('mobilePanelClose').addEventListener('click', () => {
+                rightPanel.classList.remove('mobile-visible');
+            });
+        }
+    }
+    
+    mobileControlsBtn.addEventListener('click', showMobileControls);
+    
+    // Handle navigation links
+    document.querySelectorAll('.mobile-menu-item').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth' });
+                closeMobileMenu();
+            }
+        });
+    });
+}
+
 // Initialize
-updateRulesDisplay();
-drawTree();
-setupZoomAndPan();
-updateTraversalResults();
-initThemeToggle();
+function initializeApp() {
+    updateRulesDisplay();
+    drawTree();
+    setupZoomAndPan();
+    updateTraversalResults();
+    initThemeToggle();
+    initMobileMenu();
+}
+
+// Call the initialize function
+initializeApp();
