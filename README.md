@@ -7,9 +7,7 @@ This project helps visualize how **insertion**, **color flipping**, and **rotati
 
 ## 🚀 Live Demo
 
-🔗 **Try it here:** [Red-Black Tree Visualizer on Netlify](https://your-site-name.netlify.app)
-
-*(Replace the above link with your actual Netlify URL once deployed)*
+🔗 **Try it here:** [Red-Black Tree Visualizer on Netlify](https://rbt-visualizer.netlify.app/)
 
 ---
 
@@ -37,7 +35,7 @@ This project helps visualize how **insertion**, **color flipping**, and **rotati
 
 1. **Clone this repository**
    ```bash
-   git clone https://github.com/<your-username>/RBT-Visualizer.git
+   https://github.com/inferno2136/RBT_Visualizer.git
    ```
 
 2. **Navigate to the project folder**
@@ -57,7 +55,6 @@ This project helps visualize how **insertion**, **color flipping**, and **rotati
 |--------------------|------------------------|
 | *(Add screenshot here)* | *(Add another screenshot here)* |
 
-> You can add screenshots later by uploading them to the repo and replacing these placeholders.
 
 ---
 
