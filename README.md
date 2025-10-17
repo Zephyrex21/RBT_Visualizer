@@ -29,7 +29,7 @@ It helps visualize how insertion and balancing work in Red-Black Trees — one o
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/<your-username>/RBT-Visualizer.git
+   https://github.com/inferno2136/RBT_Visualizer.git
 
 
 Navigate to the folder
