@@ -1599,21 +1599,21 @@ function processQueue() {
     isProcessingQueue = true;
     const operation = operationQueue.shift();
     
-    // Get the operation type and value immediately
-    const operationType = operation.type;
-    const operationValue = operation.value;
-    const operationKey = `${currentTreeType}_${operationType}`;
-    
-    // IMMEDIATELY show the complete pseudocode for this operation
-    showOperationPseudocode(operationType, operationValue);
-    
     let steps;
     if (operation.type === 'insert') {
         const tree = currentTreeType === 'rb' ? rbTree : avlTree;
         steps = tree.insert(operation.value);
+        
+        // Generate pseudocode based on actual steps
+        generateOperationPseudocode(operation.type, operation.value, steps);
+        
     } else if (operation.type === 'delete') {
         const tree = currentTreeType === 'rb' ? rbTree : avlTree;
         steps = tree.delete(operation.value);
+        
+        // Generate pseudocode based on actual steps
+        generateOperationPseudocode(operation.type, operation.value, steps);
+        
     } else if (operation.type === 'clear') {
         if (currentTreeType === 'rb') {
             rbTree = new RedBlackTree();
@@ -1621,6 +1621,9 @@ function processQueue() {
             avlTree = new AVLTree();
         }
         steps = [{ code: 'CLEAR_TREE', text: 'Tree cleared', type: 'success' }];
+        
+        // Generate pseudocode for clear operation
+        generateOperationPseudocode(operation.type, null, steps);
     }
     
     if (operation.skipAnimation) {
@@ -2906,132 +2909,249 @@ function clearTree() {
     setButtonsEnabled(true);
 }
 
-function showOperationPseudocode(operationType, operationValue) {
+function generateOperationPseudocode(operationType, operationValue, steps) {
     const detailsContent = document.getElementById('detailsContent');
     const algorithmCode = document.getElementById('algorithmCode');
     
-    // Get the appropriate explanation and pseudocode based on operation type
     let explanation = "";
     let pseudocode = "";
     
     if (operationType === 'insert') {
         if (currentTreeType === 'rb') {
-            explanation = `Starting Red-Black Tree insertion for value ${operationValue}. The new node will be inserted as a RED leaf to maintain the black-height property of the tree. This might violate the rule that a red node cannot have a red child, which will be fixed in the fixup process.`;
-            pseudocode = `RB-Insert(T, ${operationValue})
-  z = new Node(${operationValue})
-  z.color = RED
-  BST-Insert(T, z)
-  while z.parent.color == RED
-    // Fixup cases will be handled here
-    if z.uncle.color == RED
-      z.parent.color = BLACK
-      z.uncle.color = BLACK
-      z.grandparent.color = RED
-      z = z.grandparent
-    else if z == z.parent.right
-      z = z.parent
-      LEFT-ROTATE(T, z)
-    z.parent.color = BLACK
-    z.grandparent.color = RED
-    RIGHT-ROTATE(T, z.grandparent)
-  T.root.color = BLACK`;
+            // Build explanation based on actual steps
+            explanation = `Inserting value ${operationValue} into Red-Black Tree. `;
+            
+            // Check what steps will be performed
+            const hasFixup = steps.some(step => step.code.includes('FIXUP') || step.code.includes('CASE'));
+            const hasCase1 = steps.some(step => step.code === 'RB_INSERT_CASE_1');
+            const hasCase2 = steps.some(step => step.code === 'RB_INSERT_CASE_2');
+            const hasCase3 = steps.some(step => step.code === 'RB_INSERT_CASE_3');
+            
+            if (hasFixup) {
+                explanation += `This insertion will trigger fixup operations to maintain Red-Black properties. `;
+                if (hasCase1) explanation += `Case 1 (uncle recoloring) will be applied. `;
+                if (hasCase2) explanation += `Case 2 (triangle rotation) will be applied. `;
+                if (hasCase3) explanation += `Case 3 (line rotation) will be applied. `;
+            } else {
+                explanation += `This insertion will not require any fixup operations as it maintains all Red-Black properties. `;
+            }
+            
+            // Build pseudocode based on actual steps
+            pseudocode = `RB-Insert(T, ${operationValue})\n`;
+            pseudocode += `  z = new Node(${operationValue})\n`;
+            pseudocode += `  z.color = RED\n`;
+            pseudocode += `  BST-Insert(T, z)\n`;
+            
+            if (hasFixup) {
+                pseudocode += `  \n  // Fixup required:\n`;
+                pseudocode += `  while z.parent.color == RED:\n`;
+                
+                if (hasCase1) {
+                    pseudocode += `    // Case 1: Uncle is RED\n`;
+                    pseudocode += `    z.parent.color = BLACK\n`;
+                    pseudocode += `    z.uncle.color = BLACK\n`;
+                    pseudocode += `    z.grandparent.color = RED\n`;
+                    pseudocode += `    z = z.grandparent\n`;
+                }
+                
+                if (hasCase2) {
+                    pseudocode += `    // Case 2: Triangle formation\n`;
+                    pseudocode += `    z = z.parent\n`;
+                    pseudocode += `    LEFT-ROTATE(T, z)\n`;
+                }
+                
+                if (hasCase3) {
+                    pseudocode += `    // Case 3: Line formation\n`;
+                    pseudocode += `    z.parent.color = BLACK\n`;
+                    pseudocode += `    z.grandparent.color = RED\n`;
+                    pseudocode += `    RIGHT-ROTATE(T, z.grandparent)\n`;
+                }
+            }
+            
+            pseudocode += `  \n  T.root.color = BLACK`;
+            
         } else {
-            explanation = `Starting AVL Tree insertion for value ${operationValue}. We first perform a standard Binary Search Tree insertion to place the new node in the correct position. After insertion, we will walk back up the tree to check for and fix any balance violations.`;
-            pseudocode = `AVL-Insert(T, ${operationValue})
-  // Standard BST Insertion
-  if T.root == NULL
-    T.root = new Node(${operationValue})
-  else
-    if ${operationValue} < node.key
-      node.left = AVL-Insert(node.left, ${operationValue})
-    else if ${operationValue} > node.key
-      node.right = AVL-Insert(node.right, ${operationValue})
-  
-  // Update height and rebalance
-  node.height = 1 + max(height(node.left), height(node.right))
-  balance = getBalance(node)
-  
-  // Fix balance if needed
-  if balance > 1 && ${operationValue} < node.left.key
-    return rightRotate(node)
-  if balance < -1 && ${operationValue} > node.right.key
-    return leftRotate(node)
-  // Other balance cases...`;
+            // AVL Tree insertion
+            explanation = `Inserting value ${operationValue} into AVL Tree. `;
+            
+            // Check what rotation cases will be performed
+            const hasRotation = steps.some(step => step.code.includes('CASE'));
+            const hasLL = steps.some(step => step.code === 'AVL_INSERT_LL_CASE');
+            const hasRR = steps.some(step => step.code === 'AVL_INSERT_RR_CASE');
+            const hasLR = steps.some(step => step.code === 'AVL_INSERT_LR_CASE');
+            const hasRL = steps.some(step => step.code === 'AVL_INSERT_RL_CASE');
+            
+            if (hasRotation) {
+                explanation += `This insertion will require rotation(s) to maintain AVL balance. `;
+                if (hasLL) explanation += `Left-Left case: Right rotation will be applied. `;
+                if (hasRR) explanation += `Right-Right case: Left rotation will be applied. `;
+                if (hasLR) explanation += `Left-Right case: Left-Right rotation will be applied. `;
+                if (hasRL) explanation += `Right-Left case: Right-Left rotation will be applied. `;
+            } else {
+                explanation += `This insertion maintains AVL balance without requiring rotations. `;
+            }
+            
+            // Build pseudocode based on actual steps
+            pseudocode = `AVL-Insert(T, ${operationValue})\n`;
+            pseudocode += `  // Standard BST Insertion\n`;
+            pseudocode += `  if T.root == NULL:\n`;
+            pseudocode += `    T.root = new Node(${operationValue})\n`;
+            pseudocode += `  else:\n`;
+            pseudocode += `    if ${operationValue} < node.key:\n`;
+            pseudocode += `      node.left = AVL-Insert(node.left, ${operationValue})\n`;
+            pseudocode += `    else if ${operationValue} > node.key:\n`;
+            pseudocode += `      node.right = AVL-Insert(node.right, ${operationValue})\n`;
+            
+            if (hasRotation) {
+                pseudocode += `  \n  // Balance and Rotate:\n`;
+                pseudocode += `  node.height = 1 + max(height(node.left), height(node.right))\n`;
+                pseudocode += `  balance = getBalance(node)\n`;
+                
+                if (hasLL) {
+                    pseudocode += `  \n  // Left-Left Case\n`;
+                    pseudocode += `  if balance > 1 && ${operationValue} < node.left.key:\n`;
+                    pseudocode += `    return rightRotate(node)\n`;
+                }
+                
+                if (hasRR) {
+                    pseudocode += `  \n  // Right-Right Case\n`;
+                    pseudocode += `  if balance < -1 && ${operationValue} > node.right.key:\n`;
+                    pseudocode += `    return leftRotate(node)\n`;
+                }
+                
+                if (hasLR) {
+                    pseudocode += `  \n  // Left-Right Case\n`;
+                    pseudocode += `  if balance > 1 && ${operationValue} > node.left.key:\n`;
+                    pseudocode += `    node.left = leftRotate(node.left)\n`;
+                    pseudocode += `    return rightRotate(node)\n`;
+                }
+                
+                if (hasRL) {
+                    pseudocode += `  \n  // Right-Left Case\n`;
+                    pseudocode += `  if balance < -1 && ${operationValue} < node.right.key:\n`;
+                    pseudocode += `    node.right = rightRotate(node.right)\n`;
+                    pseudocode += `    return leftRotate(node)\n`;
+                }
+            }
         }
+        
     } else if (operationType === 'delete') {
         if (currentTreeType === 'rb') {
-            explanation = `Starting Red-Black Tree deletion for value ${operationValue}. We first find the node to delete. The complexity comes from ensuring that if we remove a BLACK node, the 'black-height' property along all paths is maintained.`;
-            pseudocode = `RB-Delete(T, ${operationValue})
-  z = T.search(${operationValue})
-  if z == T.NIL
-    return "Node not found"
-  
-  y = z
-  y-original-color = y.color
-  
-  if z.left == T.NIL
-    x = z.right
-    TRANSPLANT(T, z, z.right)
-  else if z.right == T.NIL
-    x = z.left
-    TRANSPLANT(T, z, z.left)
-  else
-    y = TREE-MINIMUM(z.right)
-    y-original-color = y.color
-    x = y.right
-    if y.parent != z
-      TRANSPLANT(T, y, y.right)
-      y.right = z.right
-      y.right.parent = y
-    TRANSPLANT(T, z, y)
-    y.left = z.left
-    y.left.parent = y
-    y.color = z.color
-  
-  if y-original-color == BLACK
-    RB-Delete-Fixup(T, x)`;
+            explanation = `Deleting value ${operationValue} from Red-Black Tree. `;
+            
+            // Check what deletion cases will be performed
+            const hasFixup = steps.some(step => step.code.includes('FIXUP') || step.code.includes('CASE'));
+            const hasOneChild = steps.some(step => step.code === 'RB_DELETE_NODE_ONE_CHILD');
+            const hasTwoChildren = steps.some(step => step.code === 'RB_DELETE_NODE_TWO_CHILDREN');
+            
+            if (hasOneChild) {
+                explanation += `The node has at most one child and will be transplanted directly. `;
+            } else if (hasTwoChildren) {
+                explanation += `The node has two children and will be replaced with its in-order successor. `;
+            }
+            
+            if (hasFixup) {
+                explanation += `Fixup operations will be performed to maintain Red-Black properties. `;
+            } else {
+                explanation += `No fixup needed as the deleted node was red. `;
+            }
+            
+            // Build deletion pseudocode
+            pseudocode = `RB-Delete(T, ${operationValue})\n`;
+            pseudocode += `  z = T.search(${operationValue})\n`;
+            pseudocode += `  if z == T.NIL:\n`;
+            pseudocode += `    return "Node not found"\n`;
+            pseudocode += `  \n`;
+            pseudocode += `  y = z\n`;
+            pseudocode += `  y-original-color = y.color\n`;
+            
+            if (hasOneChild) {
+                pseudocode += `  \n  // Node has one child or none\n`;
+                pseudocode += `  if z.left == T.NIL:\n`;
+                pseudocode += `    x = z.right\n`;
+                pseudocode += `    TRANSPLANT(T, z, z.right)\n`;
+                pseudocode += `  else if z.right == T.NIL:\n`;
+                pseudocode += `    x = z.left\n`;
+                pseudocode += `    TRANSPLANT(T, z, z.left)\n`;
+            } else if (hasTwoChildren) {
+                pseudocode += `  \n  // Node has two children\n`;
+                pseudocode += `  y = TREE-MINIMUM(z.right)\n`;
+                pseudocode += `  y-original-color = y.color\n`;
+                pseudocode += `  x = y.right\n`;
+                pseudocode += `  if y.parent != z:\n`;
+                pseudocode += `    TRANSPLANT(T, y, y.right)\n`;
+                pseudocode += `    y.right = z.right\n`;
+                pseudocode += `    y.right.parent = y\n`;
+                pseudocode += `  TRANSPLANT(T, z, y)\n`;
+                pseudocode += `  y.left = z.left\n`;
+                pseudocode += `  y.left.parent = y\n`;
+                pseudocode += `  y.color = z.color\n`;
+            }
+            
+            if (hasFixup) {
+                pseudocode += `  \n  // Fixup required\n`;
+                pseudocode += `  if y-original-color == BLACK:\n`;
+                pseudocode += `    RB-Delete-Fixup(T, x)\n`;
+            } else {
+                pseudocode += `  \n  // No fixup needed\n`;
+                pseudocode += `  // Tree remains valid\n`;
+            }
+            
         } else {
-            explanation = `Starting AVL Tree deletion for value ${operationValue}. We first find the node to delete and remove it using the standard BST deletion logic. After removal, the tree may be unbalanced, so we must walk back up from the deletion point and rebalance as necessary.`;
-            pseudocode = `AVL-Delete(T, ${operationValue})
-  // Standard BST Deletion
-  if node == NULL
-    return "Node not found"
-  
-  if ${operationValue} < node.key
-    node.left = AVL-Delete(node.left, ${operationValue})
-  else if ${operationValue} > node.key
-    node.right = AVL-Delete(node.right, ${operationValue})
-  else
-    // Node with one child or no child
-    if node.left == NULL || node.right == NULL
-      // Handle leaf or single child case
-    else
-      // Node with two children
-      temp = minValueNode(node.right)
-      node.key = temp.key
-      node.right = AVL-Delete(node.right, temp.key)
-  
-  // Update height and rebalance
-  node.height = 1 + max(height(node.left), height(node.right))
-  balance = getBalance(node)
-  
-  // Fix balance if needed
-  if balance > 1 && getBalance(node.left) >= 0
-    return rightRotate(node)
-  // Other balance cases...`;
+            // AVL Tree deletion
+            explanation = `Deleting value ${operationValue} from AVL Tree. `;
+            
+            const hasRotation = steps.some(step => step.code.includes('CASE'));
+            
+            if (hasRotation) {
+                explanation += `Balance violations detected and will be fixed with rotations. `;
+            } else {
+                explanation += `Deletion maintains AVL balance. `;
+            }
+            
+            pseudocode = `AVL-Delete(T, ${operationValue})\n`;
+            pseudocode += `  // Standard BST Deletion\n`;
+            pseudocode += `  if node == NULL:\n`;
+            pseudocode += `    return "Node not found"\n`;
+            pseudocode += `  \n`;
+            pseudocode += `  if ${operationValue} < node.key:\n`;
+            pseudocode += `    node.left = AVL-Delete(node.left, ${operationValue})\n`;
+            pseudocode += `  else if ${operationValue} > node.key:\n`;
+            pseudocode += `    node.right = AVL-Delete(node.right, ${operationValue})\n`;
+            pseudocode += `  else:\n`;
+            pseudocode += `    // Delete this node\n`;
+            
+            if (hasRotation) {
+                pseudocode += `    \n    // Rebalance after deletion\n`;
+                pseudocode += `    node.height = 1 + max(height(node.left), height(node.right))\n`;
+                pseudocode += `    balance = getBalance(node)\n`;
+                pseudocode += `    \n`;
+                pseudocode += `    // Apply necessary rotations\n`;
+                pseudocode += `    if balance > 1 && getBalance(node.left) >= 0:\n`;
+                pseudocode += `      return rightRotate(node)\n`;
+                pseudocode += `    if balance > 1 && getBalance(node.left) < 0:\n`;
+                pseudocode += `      node.left = leftRotate(node.left)\n`;
+                pseudocode += `      return rightRotate(node)\n`;
+                pseudocode += `    if balance < -1 && getBalance(node.right) <= 0:\n`;
+                pseudocode += `      return leftRotate(node)\n`;
+                pseudocode += `    if balance < -1 && getBalance(node.right) > 0:\n`;
+                pseudocode += `      node.right = rightRotate(node.right)\n`;
+                pseudocode += `      return leftRotate(node)\n`;
+            }
         }
+        
     } else if (operationType === 'clear') {
         explanation = "Clearing the entire tree. All nodes will be removed and the tree will be reset to an empty state.";
-        pseudocode = `// Clear Tree
-if currentTreeType == 'rb'
-  rbTree = new RedBlackTree()
-else
-  avlTree = new AVLTree()
-
-// Reset display
-updateStats()
-updateTraversalResults()
-drawTree()`;
+        pseudocode = `// Clear Tree Operation\n`;
+        pseudocode += `if currentTreeType == 'rb':\n`;
+        pseudocode += `  rbTree = new RedBlackTree()\n`;
+        pseudocode += `else:\n`;
+        pseudocode += `  avlTree = new AVLTree()\n`;
+        pseudocode += `\n`;
+        pseudocode += `// Reset display\n`;
+        pseudocode += `updateStats()\n`;
+        pseudocode += `updateTraversalResults()\n`;
+        pseudocode += `drawTree()`;
     }
     
     // Update the display immediately
@@ -3046,7 +3166,6 @@ drawTree()`;
         pseudocode: pseudocode
     };
 }
-
 
 // Call the initialize function
 initializeApp();
