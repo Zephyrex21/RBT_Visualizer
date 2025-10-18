@@ -1498,8 +1498,6 @@ function updateStats() {
 // Update the updateAlgorithmDisplay function
 function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
     const display = document.getElementById('algorithmDisplay');
-    const detailsContent = document.getElementById('detailsContent');
-    const algorithmCode = document.getElementById('algorithmCode');
     const cuesContent = document.getElementById('cuesContent');
     
     let icon = '✨';
@@ -1508,19 +1506,7 @@ function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
     else if (step.type === 'error') icon = '❌';
     else if (step.type === 'info') icon = 'ℹ️';
     
-    // Get operation details from the database
-    const operationKey = `${currentTreeType}_${operationQueue.length > 0 && operationQueue[0].type === 'insert' ? 'insert' : 'delete'}`;
-    const details = operationDetails[operationKey] && operationDetails[operationKey][step.code];
-    
-    let explanation = "Perform an operation to see detailed explanations of each step.";
-    let pseudocode = "Pseudocode for the current operation will appear here.";
-    
-    if (details) {
-        explanation = details.explanation;
-        pseudocode = details.pseudocode;
-    }
-
-    // Update main display
+    // Update main display only - no longer updating details and pseudocode
     display.innerHTML = `
         <div class="current-step">
             <span>${icon}</span>
@@ -1529,14 +1515,6 @@ function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
         </div>
         <div class="step-description">Step ${stepNumber + 1} of ${totalSteps}</div>
     `;
-    
-    // Update detailed explanation
-    detailsContent.innerHTML = `
-        <p>${explanation}</p>
-    `;
-    
-    // Update pseudocode
-    algorithmCode.textContent = pseudocode;
     
     // Update visual cues based on current operation
     updateVisualCues(cuesContent, step);
@@ -1621,6 +1599,14 @@ function processQueue() {
     isProcessingQueue = true;
     const operation = operationQueue.shift();
     
+    // Get the operation type and value immediately
+    const operationType = operation.type;
+    const operationValue = operation.value;
+    const operationKey = `${currentTreeType}_${operationType}`;
+    
+    // IMMEDIATELY show the complete pseudocode for this operation
+    showOperationPseudocode(operationType, operationValue);
+    
     let steps;
     if (operation.type === 'insert') {
         const tree = currentTreeType === 'rb' ? rbTree : avlTree;
@@ -1649,6 +1635,7 @@ function processQueue() {
             </div>
             <div class="step-description">All nodes inserted at once</div>
         `;
+        
         resetOperationState();
     } else {
         // Store the steps for persistence
@@ -1676,6 +1663,9 @@ function animateSteps(steps) {
             const lastStep = steps[steps.length - 1];
             updateAlgorithmDisplay(lastStep, steps.length - 1, steps.length);
             drawTree();
+            
+            // CRITICAL: Set a flag to indicate animation is complete
+            window.animationComplete = true;
             
             animationTimeout = setTimeout(() => {
                 resetOperationState();
@@ -1987,6 +1977,9 @@ function clearTree() {
     operationQueue = [];
     isProcessingQueue = false;
     
+    // Clear current operation
+    window.currentOperation = null;
+    
     // Clear the tree immediately
     if (currentTreeType === 'rb') {
         rbTree = new RedBlackTree();
@@ -2009,6 +2002,13 @@ function clearTree() {
         </div>
         <div class="step-description">Ready to perform new operations</div>
     `;
+    
+    // Reset to default content
+    const detailsContent = document.getElementById('detailsContent');
+    const algorithmCode = document.getElementById('algorithmCode');
+    
+    detailsContent.innerHTML = `<p>Perform an operation to see detailed explanations of each step.</p>`;
+    algorithmCode.textContent = "Pseudocode for the current operation will appear here.";
     
     // Update statistics with explicit reset
     document.getElementById('nodeCount').textContent = '0';
@@ -2527,8 +2527,17 @@ function initializeApp() {
     updateTraversalResults();
     initThemeToggle();
     initMobileMenu();
+    initBackgroundAnimations();
+    initFloatingParticles();
+    initThemeParticles();
+    initOrbitingElements();
+    
+    // Initialize persistent display variable
+    window.persistentOperationDetails = null;
+    
+    // REMOVE THIS LINE - NO MORE INTERVAL CHECK
+    // setInterval(maintainPersistentDisplay, 2000);
 }
-
 // Particle System for Dark Mode
 class ParticleSystem {
     constructor(canvas) {
@@ -2807,8 +2816,237 @@ function initFloatingParticles() {
     });
 }
 
+// Clear persistent display when starting a new operation
+function clearPersistentDisplay() {
+    const detailsContent = document.getElementById('detailsContent');
+    const algorithmCode = document.getElementById('algorithmCode');
+    
+    // Remove persistent attributes
+    detailsContent.removeAttribute('data-persistent');
+    algorithmCode.removeAttribute('data-persistent');
+    
+    // Reset to default content
+    detailsContent.innerHTML = `
+        <p>Perform an operation to see detailed explanations of each step.</p>
+    `;
+    algorithmCode.textContent = "Pseudocode for the current operation will appear here.";
+}
+
+// Call this function only when needed - add to these existing functions:
+function resetOperationState() {
+    isProcessingQueue = false;
+    processQueue();
+    // Add this line
+    setTimeout(protectPersistentDisplay, 100);
+}
+
+function clearTree() {
+    if (animationTimeout) {
+        clearTimeout(animationTimeout);
+    }
+    
+    // Clear the queue first
+    operationQueue = [];
+    isProcessingQueue = false;
+    
+    // Clear persistent display when clearing tree
+    window.persistentOperationDetails = null;
+    window.animationComplete = false;
+    
+    // Clear the tree immediately
+    if (currentTreeType === 'rb') {
+        rbTree = new RedBlackTree();
+    } else {
+        avlTree = new AVLTree();
+    }
+    
+    // Clear saved states
+    rbTreeState = null;
+    avlTreeState = null;
+    
+    // Update display immediately
+    drawTree();
+    const display = document.getElementById('algorithmDisplay');
+    display.innerHTML = `
+        <div class="current-step">
+            <span>🧹</span>
+            <span>Tree cleared</span>
+            <span class="step-type info">Ready</span>
+        </div>
+        <div class="step-description">Ready to perform new operations</div>
+    `;
+    
+    // Reset to default content
+    const detailsContent = document.getElementById('detailsContent');
+    const algorithmCode = document.getElementById('algorithmCode');
+    
+    detailsContent.innerHTML = `<p>Perform an operation to see detailed explanations of each step.</p>`;
+    algorithmCode.textContent = "Pseudocode for the current operation will appear here.";
+    
+    // Update statistics with explicit reset
+    document.getElementById('nodeCount').textContent = '0';
+    document.getElementById('treeHeight').textContent = '0';
+    
+    if (currentTreeType === 'rb') {
+        document.getElementById('treeStat').textContent = '0';
+        document.getElementById('treeStatLabel').textContent = 'Black Height';
+    } else {
+        document.getElementById('treeStat').textContent = '-';
+        document.getElementById('treeStatLabel').textContent = 'Balance Factor';
+    }
+    
+    // Update traversal results
+    updateTraversalResults();
+    
+    // Update history
+    addToHistory('Clear Tree', null, 'clear');
+    showToast('Tree cleared', 'info');
+    
+    // Enable buttons
+    setButtonsEnabled(true);
+}
+
+function showOperationPseudocode(operationType, operationValue) {
+    const detailsContent = document.getElementById('detailsContent');
+    const algorithmCode = document.getElementById('algorithmCode');
+    
+    // Get the appropriate explanation and pseudocode based on operation type
+    let explanation = "";
+    let pseudocode = "";
+    
+    if (operationType === 'insert') {
+        if (currentTreeType === 'rb') {
+            explanation = `Starting Red-Black Tree insertion for value ${operationValue}. The new node will be inserted as a RED leaf to maintain the black-height property of the tree. This might violate the rule that a red node cannot have a red child, which will be fixed in the fixup process.`;
+            pseudocode = `RB-Insert(T, ${operationValue})
+  z = new Node(${operationValue})
+  z.color = RED
+  BST-Insert(T, z)
+  while z.parent.color == RED
+    // Fixup cases will be handled here
+    if z.uncle.color == RED
+      z.parent.color = BLACK
+      z.uncle.color = BLACK
+      z.grandparent.color = RED
+      z = z.grandparent
+    else if z == z.parent.right
+      z = z.parent
+      LEFT-ROTATE(T, z)
+    z.parent.color = BLACK
+    z.grandparent.color = RED
+    RIGHT-ROTATE(T, z.grandparent)
+  T.root.color = BLACK`;
+        } else {
+            explanation = `Starting AVL Tree insertion for value ${operationValue}. We first perform a standard Binary Search Tree insertion to place the new node in the correct position. After insertion, we will walk back up the tree to check for and fix any balance violations.`;
+            pseudocode = `AVL-Insert(T, ${operationValue})
+  // Standard BST Insertion
+  if T.root == NULL
+    T.root = new Node(${operationValue})
+  else
+    if ${operationValue} < node.key
+      node.left = AVL-Insert(node.left, ${operationValue})
+    else if ${operationValue} > node.key
+      node.right = AVL-Insert(node.right, ${operationValue})
+  
+  // Update height and rebalance
+  node.height = 1 + max(height(node.left), height(node.right))
+  balance = getBalance(node)
+  
+  // Fix balance if needed
+  if balance > 1 && ${operationValue} < node.left.key
+    return rightRotate(node)
+  if balance < -1 && ${operationValue} > node.right.key
+    return leftRotate(node)
+  // Other balance cases...`;
+        }
+    } else if (operationType === 'delete') {
+        if (currentTreeType === 'rb') {
+            explanation = `Starting Red-Black Tree deletion for value ${operationValue}. We first find the node to delete. The complexity comes from ensuring that if we remove a BLACK node, the 'black-height' property along all paths is maintained.`;
+            pseudocode = `RB-Delete(T, ${operationValue})
+  z = T.search(${operationValue})
+  if z == T.NIL
+    return "Node not found"
+  
+  y = z
+  y-original-color = y.color
+  
+  if z.left == T.NIL
+    x = z.right
+    TRANSPLANT(T, z, z.right)
+  else if z.right == T.NIL
+    x = z.left
+    TRANSPLANT(T, z, z.left)
+  else
+    y = TREE-MINIMUM(z.right)
+    y-original-color = y.color
+    x = y.right
+    if y.parent != z
+      TRANSPLANT(T, y, y.right)
+      y.right = z.right
+      y.right.parent = y
+    TRANSPLANT(T, z, y)
+    y.left = z.left
+    y.left.parent = y
+    y.color = z.color
+  
+  if y-original-color == BLACK
+    RB-Delete-Fixup(T, x)`;
+        } else {
+            explanation = `Starting AVL Tree deletion for value ${operationValue}. We first find the node to delete and remove it using the standard BST deletion logic. After removal, the tree may be unbalanced, so we must walk back up from the deletion point and rebalance as necessary.`;
+            pseudocode = `AVL-Delete(T, ${operationValue})
+  // Standard BST Deletion
+  if node == NULL
+    return "Node not found"
+  
+  if ${operationValue} < node.key
+    node.left = AVL-Delete(node.left, ${operationValue})
+  else if ${operationValue} > node.key
+    node.right = AVL-Delete(node.right, ${operationValue})
+  else
+    // Node with one child or no child
+    if node.left == NULL || node.right == NULL
+      // Handle leaf or single child case
+    else
+      // Node with two children
+      temp = minValueNode(node.right)
+      node.key = temp.key
+      node.right = AVL-Delete(node.right, temp.key)
+  
+  // Update height and rebalance
+  node.height = 1 + max(height(node.left), height(node.right))
+  balance = getBalance(node)
+  
+  // Fix balance if needed
+  if balance > 1 && getBalance(node.left) >= 0
+    return rightRotate(node)
+  // Other balance cases...`;
+        }
+    } else if (operationType === 'clear') {
+        explanation = "Clearing the entire tree. All nodes will be removed and the tree will be reset to an empty state.";
+        pseudocode = `// Clear Tree
+if currentTreeType == 'rb'
+  rbTree = new RedBlackTree()
+else
+  avlTree = new AVLTree()
+
+// Reset display
+updateStats()
+updateTraversalResults()
+drawTree()`;
+    }
+    
+    // Update the display immediately
+    detailsContent.innerHTML = `<p>${explanation}</p>`;
+    algorithmCode.textContent = pseudocode;
+    
+    // Store as current operation
+    window.currentOperation = {
+        type: operationType,
+        value: operationValue,
+        explanation: explanation,
+        pseudocode: pseudocode
+    };
+}
+
 
 // Call the initialize function
 initializeApp();
-
-
