@@ -741,25 +741,6 @@ body.light-mode .step-description {
     color: var(--light-text-secondary);
 }
 
-.algorithm-code {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin-top: 1rem;
-    font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-    color: #e2e8f0;
-    overflow-x: auto;
-    white-space: pre;
-    flex-grow: 1;
-    transition: background 0.3s ease;
-}
-
-body.light-mode .algorithm-code {
-    background: rgba(0, 0, 0, 0.1);
-    color: #334155;
-}
-
 .step-controls {
     display: flex;
     align-items: center;
@@ -3669,3 +3650,130 @@ body.light-mode .mobile-panel-close {
         padding: 0.5rem;
     }
 }
+
+/* =================================================================== */
+/* NEW STYLES ADDED FOR PSEUDOCODE SECTION */
+/* =================================================================== */
+
+.pseudocode-title {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+body.light-mode .pseudocode-title {
+    color: var(--light-accent);
+}
+
+.algorithm-code {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    overflow-x: auto;
+    white-space: pre;
+    flex-grow: 1;
+    transition: background 0.3s ease;
+}
+
+body.light-mode .algorithm-code {
+    background: rgba(0, 0, 0, 0.1);
+    color: #334155;
+}
+
+/* ... (all your existing CSS remains the same) ... */
+
+/* =================================================================== */
+/* MODIFIED STYLES FOR ALGORITHM SECTION */
+/* =================================================================== */
+
+.main-layout {
+    display: grid;
+    /* Increased the max-width of the left panel to give it more space */
+    grid-template-columns: 400px 1fr 350px; 
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.algorithm-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* Make this panel grow to take up available space */
+    flex-grow: 1; 
+}
+
+.algorithm-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    /* Make this section grow to fill the panel */
+    flex-grow: 1; 
+    /* Ensure it has a good minimum height */
+    min-height: 600px; 
+}
+
+/* ... (rest of your CSS) ... */
+
+.algorithm-code {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #e2e8f0;
+    /* MODIFIED: Wrap text instead of scrolling */
+    white-space: pre-wrap; 
+    /* MODIFIED: Removed horizontal scrollbar */
+    /* overflow-x: auto; */
+    flex-grow: 1;
+    transition: background 0.3s ease;
+}
+
+body.light-mode .algorithm-code {
+    background: rgba(0, 0, 0, 0.1);
+    color: #334155;
+}
+
+/* ... (rest of your CSS) ... */
+
+/* Responsive Design Adjustments */
+@media (max-width: 1400px) {
+    /* Adjusted for the new layout */
+    .main-layout {
+        grid-template-columns: 350px 1fr 340px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .algorithm-panel {
+        order: 2;
+        /* Reset flex-grow for mobile layout */
+        flex-grow: 0; 
+    }
+    
+    .visualization-panel {
+        order: 1;
+    }
+    
+    .right-panel {
+        order: 3;
+    }
+}
+
+/* ... (rest of your responsive CSS) ... */

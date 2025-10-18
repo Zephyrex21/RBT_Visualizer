@@ -20,7 +20,7 @@ class RedBlackTree {
 
     insert(value) {
         const steps = [];
-        steps.push({ text: `Inserting value ${value}`, type: 'info' });
+        steps.push({ code: 'RB_INSERT_START', text: `Inserting value ${value}`, type: 'info' });
         
         const newNode = new RedBlackNode(value);
         newNode.left = this.NIL;
@@ -43,16 +43,16 @@ class RedBlackTree {
         
         if (parent === this.NIL) {
             this.root = newNode;
-            steps.push({ text: 'Tree was empty, new node is root', type: 'success' });
+            steps.push({ code: 'RB_INSERT_ROOT', text: 'Tree was empty, new node is root', type: 'success' });
         } else if (newNode.value < parent.value) {
             parent.left = newNode;
-            steps.push({ text: `Inserted as left child of ${parent.value}`, type: 'info' });
+            steps.push({ code: 'RB_INSERT_PLACE_LEFT', text: `Inserted as left child of ${parent.value}`, type: 'info' });
         } else {
             parent.right = newNode;
-            steps.push({ text: `Inserted as right child of ${parent.value}`, type: 'info' });
+            steps.push({ code: 'RB_INSERT_PLACE_RIGHT', text: `Inserted as right child of ${parent.value}`, type: 'info' });
         }
         
-        steps.push({ text: 'Fixing violations...', type: 'warning' });
+        steps.push({ code: 'RB_INSERT_FIXUP_START', text: 'Fixing violations...', type: 'warning' });
         this.insertFixup(newNode, steps);
         
         return steps;
@@ -64,18 +64,18 @@ class RedBlackTree {
                 const uncle = node.parent.parent.right;
                 
                 if (uncle.color === 'red') {
-                    steps.push({ text: 'Case 1: Uncle is red - Recoloring', type: 'info' });
+                    steps.push({ code: 'RB_INSERT_CASE_1', text: 'Case 1: Uncle is red - Recoloring', type: 'info' });
                     node.parent.color = 'black';
                     uncle.color = 'black';
                     node.parent.parent.color = 'red';
                     node = node.parent.parent;
                 } else {
                     if (node === node.parent.right) {
-                        steps.push({ text: 'Case 2: Triangle - Left rotation', type: 'info' });
+                        steps.push({ code: 'RB_INSERT_CASE_2', text: 'Case 2: Triangle - Left rotation', type: 'info' });
                         node = node.parent;
                         this.leftRotate(node);
                     }
-                    steps.push({ text: 'Case 3: Line - Right rotation', type: 'info' });
+                    steps.push({ code: 'RB_INSERT_CASE_3', text: 'Case 3: Line - Right rotation', type: 'info' });
                     node.parent.color = 'black';
                     node.parent.parent.color = 'red';
                     this.rightRotate(node.parent.parent);
@@ -84,18 +84,18 @@ class RedBlackTree {
                 const uncle = node.parent.parent.left;
                 
                 if (uncle.color === 'red') {
-                    steps.push({ text: 'Case 1: Uncle is red - Recoloring', type: 'info' });
+                    steps.push({ code: 'RB_INSERT_CASE_1', text: 'Case 1: Uncle is red - Recoloring', type: 'info' });
                     node.parent.color = 'black';
                     uncle.color = 'black';
                     node.parent.parent.color = 'red';
                     node = node.parent.parent;
                 } else {
                     if (node === node.parent.left) {
-                        steps.push({ text: 'Case 2: Triangle - Right rotation', type: 'info' });
+                        steps.push({ code: 'RB_INSERT_CASE_2', text: 'Case 2: Triangle - Right rotation', type: 'info' });
                         node = node.parent;
                         this.rightRotate(node);
                     }
-                    steps.push({ text: 'Case 3: Line - Left rotation', type: 'info' });
+                    steps.push({ code: 'RB_INSERT_CASE_3', text: 'Case 3: Line - Left rotation', type: 'info' });
                     node.parent.color = 'black';
                     node.parent.parent.color = 'red';
                     this.leftRotate(node.parent.parent);
@@ -105,7 +105,7 @@ class RedBlackTree {
             if (node === this.root) break;
         }
         this.root.color = 'black';
-        steps.push({ text: 'Root colored black - Tree balanced!', type: 'success' });
+        steps.push({ code: 'RB_INSERT_COMPLETE', text: 'Root colored black - Tree balanced!', type: 'success' });
     }
 
     leftRotate(x) {
@@ -154,11 +154,11 @@ class RedBlackTree {
 
     delete(value) {
         const steps = [];
-        steps.push({ text: `Deleting value ${value}`, type: 'info' });
+        steps.push({ code: 'RB_DELETE_START', text: `Deleting value ${value}`, type: 'info' });
         
         let node = this.search(value);
         if (node === this.NIL) {
-            steps.push({ text: `Value ${value} not found`, type: 'error' });
+            steps.push({ code: 'RB_DELETE_NOT_FOUND', text: `Value ${value} not found`, type: 'error' });
             return steps;
         }
         
@@ -169,9 +169,11 @@ class RedBlackTree {
         if (node.left === this.NIL) {
             x = node.right;
             this.transplant(node, node.right);
+            steps.push({ code: 'RB_DELETE_NODE_ONE_CHILD', text: `Node has one right child or none. Transplanting.`, type: 'info' });
         } else if (node.right === this.NIL) {
             x = node.left;
             this.transplant(node, node.left);
+            steps.push({ code: 'RB_DELETE_NODE_ONE_CHILD', text: `Node has one left child. Transplanting.`, type: 'info' });
         } else {
             y = this.minimum(node.right);
             yOriginalColor = y.color;
@@ -187,14 +189,17 @@ class RedBlackTree {
             y.left = node.left;
             y.left.parent = y;
             y.color = node.color;
+            steps.push({ code: 'RB_DELETE_NODE_TWO_CHILDREN', text: `Node has two children. Replaced with successor ${y.value}.`, type: 'info' });
         }
         
         if (yOriginalColor === 'black') {
-            steps.push({ text: 'Fixing violations after deletion...', type: 'warning' });
+            steps.push({ code: 'RB_DELETE_FIXUP_START', text: 'Fixing violations after deletion...', type: 'warning' });
             this.deleteFixup(x, steps);
+        } else {
+            steps.push({ code: 'RB_DELETE_NO_FIXUP', text: 'Deleted node was red. No fixup needed.', type: 'success' });
         }
         
-        steps.push({ text: 'Deletion complete!', type: 'success' });
+        steps.push({ code: 'RB_DELETE_COMPLETE', text: 'Deletion complete!', type: 'success' });
         return steps;
     }
 
@@ -204,7 +209,7 @@ class RedBlackTree {
                 let w = x.parent.right;
                 
                 if (w.color === 'red') {
-                    steps.push({ text: 'Case 1: Sibling is red', type: 'info' });
+                    steps.push({ code: 'RB_DELETE_CASE_1', text: 'Case 1: Sibling is red', type: 'info' });
                     w.color = 'black';
                     x.parent.color = 'red';
                     this.leftRotate(x.parent);
@@ -212,19 +217,19 @@ class RedBlackTree {
                 }
                 
                 if (w.left.color === 'black' && w.right.color === 'black') {
-                    steps.push({ text: 'Case 2: Both children of sibling are black', type: 'info' });
+                    steps.push({ code: 'RB_DELETE_CASE_2', text: 'Case 2: Both children of sibling are black', type: 'info' });
                     w.color = 'red';
                     x = x.parent;
                 } else {
                     if (w.right.color === 'black') {
-                        steps.push({ text: 'Case 3: Right child of sibling is black', type: 'info' });
+                        steps.push({ code: 'RB_DELETE_CASE_3', text: 'Case 3: Right child of sibling is black', type: 'info' });
                         w.left.color = 'black';
                         w.color = 'red';
                         this.rightRotate(w);
                         w = x.parent.right;
                     }
                     
-                    steps.push({ text: 'Case 4: Right child of sibling is red', type: 'info' });
+                    steps.push({ code: 'RB_DELETE_CASE_4', text: 'Case 4: Right child of sibling is red', type: 'info' });
                     w.color = x.parent.color;
                     x.parent.color = 'black';
                     w.right.color = 'black';
@@ -235,7 +240,7 @@ class RedBlackTree {
                 let w = x.parent.left;
                 
                 if (w.color === 'red') {
-                    steps.push({ text: 'Case 1: Sibling is red', type: 'info' });
+                    steps.push({ code: 'RB_DELETE_CASE_1', text: 'Case 1: Sibling is red', type: 'info' });
                     w.color = 'black';
                     x.parent.color = 'red';
                     this.rightRotate(x.parent);
@@ -243,19 +248,19 @@ class RedBlackTree {
                 }
                 
                 if (w.right.color === 'black' && w.left.color === 'black') {
-                    steps.push({ text: 'Case 2: Both children of sibling are black', type: 'info' });
+                    steps.push({ code: 'RB_DELETE_CASE_2', text: 'Case 2: Both children of sibling are black', type: 'info' });
                     w.color = 'red';
                     x = x.parent;
                 } else {
                     if (w.left.color === 'black') {
-                        steps.push({ text: 'Case 3: Left child of sibling is black', type: 'info' });
+                        steps.push({ code: 'RB_DELETE_CASE_3', text: 'Case 3: Left child of sibling is black', type: 'info' });
                         w.right.color = 'black';
                         w.color = 'red';
                         this.leftRotate(w);
                         w = x.parent.left;
                     }
                     
-                    steps.push({ text: 'Case 4: Left child of sibling is red', type: 'info' });
+                    steps.push({ code: 'RB_DELETE_CASE_4', text: 'Case 4: Left child of sibling is red', type: 'info' });
                     w.color = x.parent.color;
                     x.parent.color = 'black';
                     w.left.color = 'black';
@@ -267,7 +272,7 @@ class RedBlackTree {
             if (x === this.root) break;
         }
         x.color = 'black';
-        steps.push({ text: 'Delete fixup complete!', type: 'success' });
+        steps.push({ code: 'RB_DELETE_FIXUP_COMPLETE', text: 'Delete fixup complete!', type: 'success' });
     }
 
     transplant(u, v) {
@@ -344,7 +349,6 @@ class RedBlackTree {
         ];
     }
 
-    // Helper function to find uncle of a node
     getUncle(node) {
         if (node.parent === this.NIL || node.parent.parent === this.NIL) {
             return this.NIL;
@@ -357,7 +361,6 @@ class RedBlackTree {
         }
     }
 
-    // New method to serialize tree structure
     serialize() {
         return this.serializeNode(this.root);
     }
@@ -375,7 +378,6 @@ class RedBlackTree {
         };
     }
 
-    // New method to deserialize tree structure
     deserialize(data) {
         this.root = this.NIL;
         if (data) {
@@ -420,23 +422,23 @@ class AVLTree {
 
     insert(value) {
         const steps = [];
-        steps.push({ text: `Inserting value ${value}`, type: 'info' });
+        steps.push({ code: 'AVL_INSERT_START', text: `Inserting value ${value}`, type: 'info' });
         this.root = this.insertNode(this.root, value, steps);
-        steps.push({ text: 'AVL insertion complete!', type: 'success' });
+        steps.push({ code: 'AVL_INSERT_COMPLETE', text: 'AVL insertion complete!', type: 'success' });
         return steps;
     }
 
     insertNode(node, value, steps) {
         if (node === null) {
-            steps.push({ text: `Created new node with value ${value}`, type: 'info' });
+            steps.push({ code: 'AVL_INSERT_CREATE_NODE', text: `Created new node with value ${value}`, type: 'info' });
             return new AVLNode(value);
         }
 
         if (value < node.value) {
-            steps.push({ text: `Going left from node ${node.value}`, type: 'info' });
+            steps.push({ code: 'AVL_INSERT_GO_LEFT', text: `Going left from node ${node.value}`, type: 'info' });
             node.left = this.insertNode(node.left, value, steps);
         } else if (value > node.value) {
-            steps.push({ text: `Going right from node ${node.value}`, type: 'info' });
+            steps.push({ code: 'AVL_INSERT_GO_RIGHT', text: `Going right from node ${node.value}`, type: 'info' });
             node.right = this.insertNode(node.right, value, steps);
         } else {
             return node; // Duplicate values not allowed
@@ -445,30 +447,30 @@ class AVLTree {
         node.height = 1 + Math.max(this.getHeight(node.left), this.getHeight(node.right));
         
         const balance = this.getBalance(node);
-        steps.push({ text: `Node ${node.value} balance factor: ${balance}`, type: 'info' });
+        steps.push({ code: 'AVL_INSERT_CHECK_BALANCE', text: `Node ${node.value} balance factor: ${balance}`, type: 'info' });
 
         // Left Left Case
         if (balance > 1 && value < node.left.value) {
-            steps.push({ text: 'Left-Left case: Right rotation', type: 'warning' });
+            steps.push({ code: 'AVL_INSERT_LL_CASE', text: 'Left-Left case: Right rotation', type: 'warning' });
             return this.rightRotate(node);
         }
 
         // Right Right Case
         if (balance < -1 && value > node.right.value) {
-            steps.push({ text: 'Right-Right case: Left rotation', type: 'warning' });
+            steps.push({ code: 'AVL_INSERT_RR_CASE', text: 'Right-Right case: Left rotation', type: 'warning' });
             return this.leftRotate(node);
         }
 
         // Left Right Case
         if (balance > 1 && value > node.left.value) {
-            steps.push({ text: 'Left-Right case: Left-Right rotation', type: 'warning' });
+            steps.push({ code: 'AVL_INSERT_LR_CASE', text: 'Left-Right case: Left-Right rotation', type: 'warning' });
             node.left = this.leftRotate(node.left);
             return this.rightRotate(node);
         }
 
         // Right Left Case
         if (balance < -1 && value < node.right.value) {
-            steps.push({ text: 'Right-Left case: Right-Left rotation', type: 'warning' });
+            steps.push({ code: 'AVL_INSERT_RL_CASE', text: 'Right-Left case: Right-Left rotation', type: 'warning' });
             node.right = this.rightRotate(node.right);
             return this.leftRotate(node);
         }
@@ -478,23 +480,23 @@ class AVLTree {
 
     delete(value) {
         const steps = [];
-        steps.push({ text: `Deleting value ${value}`, type: 'info' });
+        steps.push({ code: 'AVL_DELETE_START', text: `Deleting value ${value}`, type: 'info' });
         this.root = this.deleteNode(this.root, value, steps);
-        steps.push({ text: 'AVL deletion complete!', type: 'success' });
+        steps.push({ code: 'AVL_DELETE_COMPLETE', text: 'AVL deletion complete!', type: 'success' });
         return steps;
     }
 
     deleteNode(node, value, steps) {
         if (node === null) {
-            steps.push({ text: `Value ${value} not found`, type: 'error' });
+            steps.push({ code: 'AVL_DELETE_NOT_FOUND', text: `Value ${value} not found`, type: 'error' });
             return null;
         }
 
         if (value < node.value) {
-            steps.push({ text: `Going left from node ${node.value}`, type: 'info' });
+            steps.push({ code: 'AVL_DELETE_GO_LEFT', text: `Going left from node ${node.value}`, type: 'info' });
             node.left = this.deleteNode(node.left, value, steps);
         } else if (value > node.value) {
-            steps.push({ text: `Going right from node ${node.value}`, type: 'info' });
+            steps.push({ code: 'AVL_DELETE_GO_RIGHT', text: `Going right from node ${node.value}`, type: 'info' });
             node.right = this.deleteNode(node.right, value, steps);
         } else {
             // Node with one child or no child
@@ -502,16 +504,16 @@ class AVLTree {
                 let temp = node.left || node.right;
                 
                 if (temp === null) {
-                    steps.push({ text: `Removing leaf node ${node.value}`, type: 'info' });
+                    steps.push({ code: 'AVL_DELETE_REMOVE_LEAF', text: `Removing leaf node ${node.value}`, type: 'info' });
                     node = null;
                 } else {
-                    steps.push({ text: `Replacing node ${node.value} with child`, type: 'info' });
+                    steps.push({ code: 'AVL_DELETE_REPLACE_WITH_CHILD', text: `Replacing node ${node.value} with child`, type: 'info' });
                     node = temp;
                 }
             } else {
                 // Node with two children
                 let temp = this.getMinValueNode(node.right);
-                steps.push({ text: `Replacing node ${node.value} with successor ${temp.value}`, type: 'info' });
+                steps.push({ code: 'AVL_DELETE_REPLACE_WITH_SUCCESSOR', text: `Replacing node ${node.value} with successor ${temp.value}`, type: 'info' });
                 node.value = temp.value;
                 node.right = this.deleteNode(node.right, temp.value, steps);
             }
@@ -522,30 +524,30 @@ class AVLTree {
         node.height = 1 + Math.max(this.getHeight(node.left), this.getHeight(node.right));
         
         const balance = this.getBalance(node);
-        steps.push({ text: `Node ${node.value} balance factor: ${balance}`, type: 'info' });
+        steps.push({ code: 'AVL_DELETE_CHECK_BALANCE', text: `Node ${node.value} balance factor: ${balance}`, type: 'info' });
 
         // Left Left Case
         if (balance > 1 && this.getBalance(node.left) >= 0) {
-            steps.push({ text: 'Left-Left case: Right rotation', type: 'warning' });
+            steps.push({ code: 'AVL_DELETE_LL_CASE', text: 'Left-Left case: Right rotation', type: 'warning' });
             return this.rightRotate(node);
         }
 
         // Left Right Case
         if (balance > 1 && this.getBalance(node.left) < 0) {
-            steps.push({ text: 'Left-Right case: Left-Right rotation', type: 'warning' });
+            steps.push({ code: 'AVL_DELETE_LR_CASE', text: 'Left-Right case: Left-Right rotation', type: 'warning' });
             node.left = this.leftRotate(node.left);
             return this.rightRotate(node);
         }
 
         // Right Right Case
         if (balance < -1 && this.getBalance(node.right) <= 0) {
-            steps.push({ text: 'Right-Right case: Left rotation', type: 'warning' });
+            steps.push({ code: 'AVL_DELETE_RR_CASE', text: 'Right-Right case: Left rotation', type: 'warning' });
             return this.leftRotate(node);
         }
 
         // Right Left Case
         if (balance < -1 && this.getBalance(node.right) > 0) {
-            steps.push({ text: 'Right-Left case: Right-Left rotation', type: 'warning' });
+            steps.push({ code: 'AVL_DELETE_RL_CASE', text: 'Right-Left case: Right-Left rotation', type: 'warning' });
             node.right = this.rightRotate(node.right);
             return this.leftRotate(node);
         }
@@ -646,7 +648,6 @@ class AVLTree {
         ];
     }
 
-    // Helper function to find uncle of a node
     getUncle(node) {
         if (node.parent === null || node.parent.parent === null) {
             return null;
@@ -659,7 +660,6 @@ class AVLTree {
         }
     }
 
-    // New method to serialize tree structure
     serialize() {
         return this.serializeNode(this.root);
     }
@@ -676,7 +676,6 @@ class AVLTree {
         };
     }
 
-    // New method to deserialize tree structure
     deserialize(data) {
         this.root = this.deserializeNode(data);
     }
@@ -690,12 +689,296 @@ class AVLTree {
         node.left = this.deserializeNode(data.left);
         node.right = this.deserializeNode(data.right);
         
-        // Recalculate height
         node.height = 1 + Math.max(this.getHeight(node.left), this.getHeight(node.right));
         
         return node;
     }
 }
+
+// --- NEW: Comprehensive Operation Details Database ---
+const operationDetails = {
+    rb_insert: {
+        'RB_INSERT_START': {
+            explanation: "Starting Red-Black Tree insertion. The new node will be inserted as a RED leaf to maintain the black-height property of the tree. This might violate the rule that a red node cannot have a red child, which we will fix in the next steps.",
+            pseudocode: `RB-Insert(T, k)
+  z = new Node(k)
+  z.color = RED
+  BST-Insert(T, z)
+  while z.parent.color == RED
+    // Fixup cases will be handled here`
+        },
+        'RB_INSERT_ROOT': {
+            explanation: "The tree was empty, so the new node becomes the root. After the fixup process, the root will always be colored black to satisfy the Red-Black Tree properties.",
+            pseudocode: `if T.root == NIL
+    T.root = z
+    z.parent = T.NIL`
+        },
+        'RB_INSERT_PLACE_LEFT': {
+            explanation: "The new node has been placed as the left child of its parent. It is colored RED. We now check if its parent is also RED, which would be a violation.",
+            pseudocode: `else if z.key < z.parent.key
+    z.parent.left = z`
+        },
+        'RB_INSERT_PLACE_RIGHT': {
+            explanation: "The new node has been placed as the right child of its parent. It is colored RED. We now check if its parent is also RED, which would be a violation.",
+            pseudocode: `else
+    z.parent.right = z`
+        },
+        'RB_INSERT_FIXUP_START': {
+            explanation: "The insertion is complete, but the tree might violate Red-Black properties. The 'Fixup' algorithm will now iterate up the tree from the inserted node to resolve any violations, primarily the 'red parent, red child' rule.",
+            pseudocode: `RB-Insert-Fixup(T, z)
+  while z.parent.color == RED
+    // Check uncle's color and structure`
+        },
+        'RB_INSERT_CASE_1': {
+            explanation: "The parent and uncle of the newly inserted node are both RED. This is the simplest case to fix. We recolor both the parent and uncle to BLACK and recolor the grandparent to RED. This resolves the violation at this level but might introduce a new violation higher up the tree, so the algorithm continues.",
+            pseudocode: `if z.uncle.color == RED
+    z.parent.color = BLACK
+    z.uncle.color = BLACK
+    z.grandparent.color = RED
+    z = z.grandparent`
+        },
+        'RB_INSERT_CASE_2': {
+            explanation: "The uncle is BLACK, and the new node forms a 'triangle' with its parent and grandparent (i.e., it's an inner child). A single rotation won't work here. We first perform a rotation on the parent to transform the structure into a 'line' (Case 3).",
+            pseudocode: `else if z == z.parent.right
+    z = z.parent
+    LEFT-ROTATE(T, z)`
+        },
+        'RB_INSERT_CASE_3': {
+            explanation: "The uncle is BLACK, and the nodes form a 'line'. This is the final rotation step. We rotate the grandparent in the opposite direction of the new node and then swap the colors of the (original) parent and grandparent. This restores all Red-Black properties.",
+            pseudocode: `z.parent.color = BLACK
+z.grandparent.color = RED
+RIGHT-ROTATE(T, z.grandparent)`
+        },
+        'RB_INSERT_COMPLETE': {
+            explanation: "The fixup process is finished. The root of the tree is always colored black as the final step to ensure the root property is met. The tree is now a valid Red-Black Tree.",
+            pseudocode: `T.root.color = BLACK`
+        }
+    },
+    rb_delete: {
+        'RB_DELETE_START': {
+            explanation: "Starting Red-Black Tree deletion. We first find the node to delete. The complexity comes from ensuring that if we remove a BLACK node, the 'black-height' property along all paths is maintained.",
+            pseudocode: `RB-Delete(T, z)
+  y = z
+  y-original-color = y.color
+  // Find node to splice out (x)`
+        },
+        'RB_DELETE_NOT_FOUND': {
+            explanation: "The value to be deleted was not found in the tree. No changes are made.",
+            pseudocode: `if z == T.NIL
+    return "Node not found"`
+        },
+        'RB_DELETE_NODE_ONE_CHILD': {
+            explanation: "The node to be deleted has at most one non-NIL child. We can 'transplant' it, meaning we replace the node with its only child. If the deleted node was BLACK, this might violate the black-height property, requiring a fixup.",
+            pseudocode: `if z.left == T.NIL
+    x = z.right
+    TRANSPLANT(T, z, z.right)
+else if z.right == T.NIL
+    x = z.left
+    TRANSPLANT(T, z, z.left)`
+        },
+        'RB_DELETE_NODE_TWO_CHILDREN': {
+            explanation: "The node has two children. We find its in-order successor (the minimum node in its right subtree), which is guaranteed to have at most one child. We replace the deleted node's value with the successor's value and then delete the successor node.",
+            pseudocode: `else
+    y = TREE-MINIMUM(z.right)
+    y-original-color = y.color
+    x = y.right
+    if y.parent != z
+        TRANSPLANT(T, y, y.right)
+        y.right = z.right
+        y.right.parent = y
+    TRANSPLANT(T, z, y)
+    y.left = z.left
+    y.left.parent = y
+    y.color = z.color`
+        },
+        'RB_DELETE_NO_FIXUP': {
+            explanation: "The node that was removed (or the node that was spliced out) was RED. Removing a red node does not affect the black-height of any path, so no further fixes are needed. The tree remains valid.",
+            pseudocode: `if y-original-color == BLACK
+    RB-Delete-Fixup(T, x)
+else
+    // Tree is still valid`
+        },
+        'RB_DELETE_FIXUP_START': {
+            explanation: "A BLACK node was removed, which has reduced the black-height of some paths. The 'Double Black' fixup algorithm is now used to resolve this. It works by ensuring that the sibling of the 'double black' node has extra black to transfer up the tree.",
+            pseudocode: `RB-Delete-Fixup(T, x)
+  while x != T.root && x.color == BLACK
+    w = x.sibling
+    // Fixup cases will be handled here`
+        },
+        'RB_DELETE_CASE_1': {
+            explanation: "The sibling of the 'double black' node is RED. By recoloring the sibling BLACK and the parent RED, and then rotating, we transform the situation into one where the sibling is BLACK (Cases 2, 3, or 4), which are easier to handle.",
+            pseudocode: `if w.color == RED
+    w.color = BLACK
+    x.parent.color = RED
+    LEFT-ROTATE(T, x.parent)
+    w = x.parent.right`
+        },
+        'RB_DELETE_CASE_2': {
+            explanation: "The sibling is BLACK, and both of its children are also BLACK. We can simply recolor the sibling RED. This gives both the 'double black' node and its sibling one less black, effectively moving the 'double black' problem up to the parent node.",
+            pseudocode: `if w.left.color == BLACK && w.right.color == BLACK
+    w.color = RED
+    x = x.parent`
+        },
+        'RB_DELETE_CASE_3': {
+            explanation: "The sibling is BLACK, its far child is BLACK, but its near child is RED. We recolor the sibling and its near child, then perform a rotation on the sibling. This sets up the tree for Case 4, which will resolve the issue.",
+            pseudocode: `else if w.right.color == BLACK
+    w.left.color = BLACK
+    w.color = RED
+    RIGHT-ROTATE(T, w)
+    w = x.parent.right`
+        },
+        'RB_DELETE_CASE_4': {
+            explanation: "The sibling is BLACK, and its far child is RED. This is the final case. We recolor the sibling to match the parent's color, color the parent BLACK, color the far child BLACK, and rotate at the parent. This resolves the 'double black' issue and restores all properties.",
+            pseudocode: `w.color = x.parent.color
+x.parent.color = BLACK
+w.right.color = BLACK
+LEFT-ROTATE(T, x.parent)
+x = T.root`
+        },
+        'RB_DELETE_FIXUP_COMPLETE': {
+            explanation: "The fixup process is complete. The 'double black' has been resolved, and the tree now satisfies all Red-Black properties. The node x is colored black to ensure the loop terminates correctly.",
+            pseudocode: `x.color = BLACK`
+        },
+        'RB_DELETE_COMPLETE': {
+            explanation: "The deletion operation is fully complete. The tree remains a valid Red-Black Tree with all properties intact.",
+            pseudocode: `// Tree is now balanced and valid.`
+        }
+    },
+    avl_insert: {
+        'AVL_INSERT_START': {
+            explanation: "Starting AVL Tree insertion. We first perform a standard Binary Search Tree insertion to place the new node in the correct position. After insertion, we will walk back up the tree to check for and fix any balance violations.",
+            pseudocode: `AVL-Insert(T, k)
+  // Standard BST Insertion
+  // Then, update heights and rebalance`
+        },
+        'AVL_INSERT_CREATE_NODE': {
+            explanation: "A new node has been created at its correct position in the tree. Its height is initialized to 1. Now, we must update the heights of its ancestors and check if any node's balance factor has become unbalanced (i.e., not -1, 0, or 1).",
+            pseudocode: `newNode = new Node(k)
+newNode.height = 1
+newNode.left = newNode.right = NULL`
+        },
+        'AVL_INSERT_GO_LEFT': {
+            explanation: "The value to insert is smaller than the current node's value, so we are traversing to the left subtree to find the correct insertion point.",
+            pseudocode: `if k < node.key
+    node.left = AVL-Insert(node.left, k)`
+        },
+        'AVL_INSERT_GO_RIGHT': {
+            explanation: "The value to insert is larger than the current node's value, so we are traversing to the right subtree to find the correct insertion point.",
+            pseudocode: `else if k > node.key
+    node.right = AVL-Insert(node.right, k)`
+        },
+        'AVL_INSERT_CHECK_BALANCE': {
+            explanation: "After inserting the node and returning up the recursion stack, we update the current node's height and calculate its balance factor (height of left subtree - height of right subtree). If this factor is outside the range [-1, 1], the node is unbalanced and requires rotation.",
+            pseudocode: `node.height = 1 + max(height(node.left), height(node.right))
+balance = getBalance(node)
+if balance > 1 || balance < -1
+    // Rotation is needed`
+        },
+        'AVL_INSERT_LL_CASE': {
+            explanation: "Left-Left Case: The node is unbalanced because its left subtree is too heavy, and the new node was inserted into the left subtree of that left child. This forms a straight line. A single right rotation on the unbalanced node will restore balance.",
+            pseudocode: `if balance > 1 && k < node.left.key
+    return rightRotate(node)`
+        },
+        'AVL_INSERT_RR_CASE': {
+            explanation: "Right-Right Case: The node is unbalanced because its right subtree is too heavy, and the new node was inserted into the right subtree of that right child. This forms a straight line. A single left rotation on the unbalanced node will restore balance.",
+            pseudocode: `if balance < -1 && k > node.right.key
+    return leftRotate(node)`
+        },
+        'AVL_INSERT_LR_CASE': {
+            explanation: "Left-Right Case: The node is unbalanced because its left subtree is too heavy, but the new node was inserted into the right subtree of that left child. This forms a 'triangle' shape. We need two rotations: first, a left rotation on the left child, followed by a right rotation on the original unbalanced node.",
+            pseudocode: `if balance > 1 && k > node.left.key
+    node.left = leftRotate(node.left)
+    return rightRotate(node)`
+        },
+        'AVL_INSERT_RL_CASE': {
+            explanation: "Right-Left Case: The node is unbalanced because its right subtree is too heavy, but the new node was inserted into the left subtree of that right child. This forms a 'triangle' shape. We need two rotations: first, a right rotation on the right child, followed by a left rotation on the original unbalanced node.",
+            pseudocode: `if balance < -1 && k < node.right.key
+    node.right = rightRotate(node.right)
+    return leftRotate(node)`
+        },
+        'AVL_INSERT_COMPLETE': {
+            explanation: "The insertion and any necessary rebalancing are complete. The tree is now a valid AVL Tree, with the balance factor of every node being -1, 0, or 1. This ensures O(log n) search, insertion, and deletion times.",
+            pseudocode: `// Tree is balanced and valid.`
+        }
+    },
+    avl_delete: {
+        'AVL_DELETE_START': {
+            explanation: "Starting AVL Tree deletion. We first find the node to delete and remove it using the standard BST deletion logic. After removal, the tree may be unbalanced, so we must walk back up from the deletion point and rebalance as necessary.",
+            pseudocode: `AVL-Delete(T, k)
+  // Standard BST Deletion
+  // Then, update heights and rebalance`
+        },
+        'AVL_DELETE_NOT_FOUND': {
+            explanation: "The value to be deleted was not found in the tree. No changes are made.",
+            pseudocode: `if node == NULL
+    return "Node not found"`
+        },
+        'AVL_DELETE_GO_LEFT': {
+            explanation: "The value to delete is smaller than the current node's value, so we are traversing to the left subtree to find the node to delete.",
+            pseudocode: `if k < node.key
+    node.left = AVL-Delete(node.left, k)`
+        },
+        'AVL_DELETE_GO_RIGHT': {
+            explanation: "The value to delete is larger than the current node's value, so we are traversing to the right subtree to find the node to delete.",
+            pseudocode: `else if k > node.key
+    node.right = AVL-Delete(node.right, k)`
+        },
+        'AVL_DELETE_REMOVE_LEAF': {
+            explanation: "The node to delete is a leaf (has no children). It can be safely removed. After removal, we will check its parent for balance issues.",
+            pseudocode: `if node.left == NULL && node.right == NULL
+    node = NULL`
+        },
+        'AVL_DELETE_REPLACE_WITH_CHILD': {
+            explanation: "The node to delete has only one child. We replace the node with its child. After replacement, we will check the new node's position for balance issues.",
+            pseudocode: `else if node.left == NULL
+    temp = node.right
+    node = temp
+else if node.right == NULL
+    temp = node.left
+    node = temp`
+        },
+        'AVL_DELETE_REPLACE_WITH_SUCCESSOR': {
+            explanation: "The node to delete has two children. We find its in-order successor (the smallest node in its right subtree), copy the successor's value to the current node, and then recursively delete the successor node (which is guaranteed to have at most one child).",
+            pseudocode: `temp = minValueNode(node.right)
+node.key = temp.key
+node.right = AVL-Delete(node.right, temp.key)`
+        },
+        'AVL_DELETE_CHECK_BALANCE': {
+            explanation: "After the deletion, we are returning up the recursion stack. We update the current node's height and calculate its balance factor. If it is outside the range [-1, 1], the node is unbalanced and requires rotation to restore the AVL property.",
+            pseudocode: `node.height = 1 + max(height(node.left), height(node.right))
+balance = getBalance(node)
+if balance > 1 || balance < -1
+    // Rotation is needed`
+        },
+        'AVL_DELETE_LL_CASE': {
+            explanation: "Left-Left Case: The node is unbalanced after deletion. Its left subtree is heavier than its right. We check the balance of the left child. If the left child is also left-heavy or balanced, a single right rotation on the current node will fix the imbalance.",
+            pseudocode: `if balance > 1 && getBalance(node.left) >= 0
+    return rightRotate(node)`
+        },
+        'AVL_DELETE_RR_CASE': {
+            explanation: "Right-Right Case: The node is unbalanced after deletion. Its right subtree is heavier than its left. We check the balance of the right child. If the right child is also right-heavy or balanced, a single left rotation on the current node will fix the imbalance.",
+            pseudocode: `if balance < -1 && getBalance(node.right) <= 0
+    return leftRotate(node)`
+        },
+        'AVL_DELETE_LR_CASE': {
+            explanation: "Left-Right Case: The node is unbalanced because its left subtree is heavy, but the left child itself is right-heavy. A single right rotation would not work. We must first perform a left rotation on the left child, then a right rotation on the current node.",
+            pseudocode: `if balance > 1 && getBalance(node.left) < 0
+    node.left = leftRotate(node.left)
+    return rightRotate(node)`
+        },
+        'AVL_DELETE_RL_CASE': {
+            explanation: "Right-Left Case: The node is unbalanced because its right subtree is heavy, but the right child itself is left-heavy. A single left rotation would not work. We must first perform a right rotation on the right child, then a left rotation on the current node.",
+            pseudocode: `if balance < -1 && getBalance(node.right) > 0
+    node.right = rightRotate(node.right)
+    return leftRotate(node)`
+        },
+        'AVL_DELETE_COMPLETE': {
+            explanation: "The deletion and any necessary rebalancing are complete. The tree is now a valid AVL Tree, with all nodes having a balance factor of -1, 0, or 1.",
+            pseudocode: `// Tree is balanced and valid.`
+        }
+    }
+};
+
 
 // Global variables
 let currentTreeType = 'rb';
@@ -778,59 +1061,6 @@ const avlRules = [
         description: "More balanced than RB trees."
     }
 ];
-
-// Algorithm templates
-const rbInsertAlgorithm = `RB-Insert(T, k):
-1. Insert new node k as RED
-2. While parent is RED:
-   - If uncle is RED: recolor
-   - If uncle is BLACK: rotate
-3. Color root BLACK`;
-
-const avlInsertAlgorithm = `AVL-Insert(T, k):
-1. Insert new node k
-2. Update heights
-3. Check balance factor
-4. If unbalanced:
-   - LL: Right rotate
-   - RR: Left rotate
-   - LR: Left-Right rotate
-   - RL: Right-Left rotate`;
-
-// Add detailed explanations for each operation
-const algorithmExplanations = {
-    rbInsert: {
-        initial: "Starting Red-Black Tree insertion. We'll insert the new node as RED and then fix any violations of the Red-Black properties.",
-        step1: "New node inserted as RED. This maintains the black-height property but may violate the rule that red nodes can't have red children.",
-        case1: "UNCLE IS RED: Both parent and uncle are red. We recolor them to black and grandparent to red. This fixes the violation at this level but may introduce one higher up.",
-        case2: "TRIANGLE FORMATION: Node forms a triangle with its parent and grandparent. We perform a rotation to align them in a straight line before the final rotation.",
-        case3: "LINE FORMATION: Node, parent, and grandparent are in a straight line. We rotate the grandparent and recolor to restore all Red-Black properties.",
-        complete: "Insertion complete! The tree now satisfies all Red-Black properties: root is black, red nodes have black children, and all paths have equal black height."
-    },
-    rbDelete: {
-        initial: "Starting Red-Black Tree deletion. We'll remove the node and fix any violations of the Red-Black properties.",
-        step1: "Node found and removed. If the removed node was black, we may have violated the black-height property.",
-        case1: "SIBLING IS RED: Recolor sibling and parent, then rotate. This gives us a black sibling to work with in the next steps.",
-        case2: "BOTH NEPHEWS BLACK: Recolor sibling to red. This reduces the black height of the sibling's subtree, matching our side.",
-        case3: "FAR NEPHEW BLACK, NEAR NEPHEW RED: Rotate near nephew, recolor, then handle as case 4. This sets up for the final rotation.",
-        case4: "FAR NEPHEW RED: Recolor sibling to match parent, far nephew to black, then rotate. This restores the black height.",
-        complete: "Deletion complete! The tree now satisfies all Red-Black properties."
-    },
-    avlInsert: {
-        initial: "Starting AVL Tree insertion. We'll insert the node and then check balance factors to ensure the tree remains balanced.",
-        step1: "New node inserted. Now checking balance factors from the insertion point up to the root.",
-        ll: "LEFT-LEFT CASE: Tree is left-heavy and left child is also left-heavy. A single right rotation will balance this subtree.",
-        rr: "RIGHT-RIGHT CASE: Tree is right-heavy and right child is also right-heavy. A single left rotation will balance this subtree.",
-        lr: "LEFT-RIGHT CASE: Tree is left-heavy but left child is right-heavy. We need a left rotation on the left child, then a right rotation.",
-        rl: "RIGHT-LEFT CASE: Tree is right-heavy but right child is left-heavy. We need a right rotation on the right child, then a left rotation.",
-        complete: "Insertion complete! All nodes have balance factors of -1, 0, or 1, ensuring O(log n) height."
-    },
-    avlDelete: {
-        initial: "Starting AVL Tree deletion. We'll remove the node and rebalance the tree if necessary.",
-        step1: "Node removed. Now checking balance factors and rebalancing as needed.",
-        complete: "Deletion complete! The tree is balanced and maintains AVL properties."
-    }
-};
 
 // Initialize rules display
 function updateRulesDisplay() {
@@ -1266,9 +1496,11 @@ function updateStats() {
 }
 
 // Update the updateAlgorithmDisplay function
-function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
+// MODIFIED: Now accepts operationType as a parameter
+function updateAlgorithmDisplay(step, stepNumber, totalSteps, operationType) {
     const display = document.getElementById('algorithmDisplay');
     const detailsContent = document.getElementById('detailsContent');
+    const algorithmCode = document.getElementById('algorithmCode');
     const cuesContent = document.getElementById('cuesContent');
     
     let icon = '✨';
@@ -1277,49 +1509,19 @@ function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
     else if (step.type === 'error') icon = '❌';
     else if (step.type === 'info') icon = 'ℹ️';
     
-    // Determine which explanation to show
-    let explanation = '';
-    let visualCue = '';
+    // Get operation details from the database using the passed operationType
+    const operationKey = `${currentTreeType}_${operationType}`;
+    const details = operationDetails[operationKey] && operationDetails[operationKey][step.code];
     
-    if (currentTreeType === 'rb') {
-        if (step.text.includes('Inserting')) {
-            explanation = algorithmExplanations.rbInsert.initial;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔴</span><span class="step-visual-text">New node will be inserted as RED</span></div>';
-        } else if (step.text.includes('Case 1: Uncle is red')) {
-            explanation = algorithmExplanations.rbInsert.case1;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">🎨</span><span class="step-visual-text">Recoloring parent and uncle to BLACK</span></div>';
-        } else if (step.text.includes('Case 2: Triangle')) {
-            explanation = algorithmExplanations.rbInsert.case2;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔄</span><span class="step-visual-text">Rotating to align nodes in a line</span></div>';
-        } else if (step.text.includes('Case 3: Line')) {
-            explanation = algorithmExplanations.rbInsert.case3;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">⚖️</span><span class="step-visual-text">Final rotation and recoloring</span></div>';
-        } else if (step.text.includes('Tree balanced')) {
-            explanation = algorithmExplanations.rbInsert.complete;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">✅</span><span class="step-visual-text">All Red-Black properties satisfied</span></div>';
-        }
-    } else {
-        if (step.text.includes('Inserting')) {
-            explanation = algorithmExplanations.avlInsert.initial;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔵</span><span class="step-visual-text">New node inserted, checking balance</span></div>';
-        } else if (step.text.includes('Left-Left case')) {
-            explanation = algorithmExplanations.avlInsert.ll;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">↩️</span><span class="step-visual-text">Performing right rotation</span></div>';
-        } else if (step.text.includes('Right-Right case')) {
-            explanation = algorithmExplanations.avlInsert.rr;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">↪️</span><span class="step-visual-text">Performing left rotation</span></div>';
-        } else if (step.text.includes('Left-Right case')) {
-            explanation = algorithmExplanations.avlInsert.lr;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔄</span><span class="step-visual-text">Performing left-right rotation</span></div>';
-        } else if (step.text.includes('Right-Left case')) {
-            explanation = algorithmExplanations.avlInsert.rl;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔄</span><span class="step-visual-text">Performing right-left rotation</span></div>';
-        } else if (step.text.includes('complete')) {
-            explanation = algorithmExplanations.avlInsert.complete;
-            visualCue = '<div class="step-visual"><span class="step-visual-icon">✅</span><span class="step-visual-text">Tree is balanced</span></div>';
-        }
+    let explanation = "Perform an operation to see detailed explanations of each step.";
+    let pseudocode = "Pseudocode for the current operation will appear here.";
+    
+    if (details) {
+        explanation = details.explanation;
+        pseudocode = details.pseudocode;
     }
-    
+
+    // Update main display
     display.innerHTML = `
         <div class="current-step">
             <span>${icon}</span>
@@ -1327,40 +1529,21 @@ function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
             <span class="step-type ${step.type}">${step.type}</span>
         </div>
         <div class="step-description">Step ${stepNumber + 1} of ${totalSteps}</div>
-        ${visualCue}
     `;
     
     // Update detailed explanation
     detailsContent.innerHTML = `
         <p>${explanation}</p>
-        <div class="step-explanation">
-            <strong>Why this step is necessary:</strong> ${getStepReason(step.text)}
-        </div>
     `;
+    
+    // Update pseudocode
+    algorithmCode.textContent = pseudocode;
     
     // Update visual cues based on current operation
     updateVisualCues(cuesContent, step);
     
     // Store current step info
     currentStepInfo = { step, stepNumber, totalSteps };
-}
-
-// Helper function to provide reasons for each step
-function getStepReason(stepText) {
-    if (stepText.includes('Inserting')) {
-        return "We need to add the new node while maintaining the tree's search property and balance.";
-    } else if (stepText.includes('Uncle is red')) {
-        return "Having two red nodes in a row violates Red-Black rules. Recoloring pushes the violation up the tree.";
-    } else if (stepText.includes('Triangle')) {
-        return "The triangle formation prevents a simple rotation. We first need to align the nodes.";
-    } else if (stepText.includes('Line')) {
-        return "With nodes aligned, a single rotation and recoloring will restore all properties.";
-    } else if (stepText.includes('balance factor')) {
-        return "AVL trees require balance factors to be -1, 0, or 1 to maintain O(log n) height.";
-    } else if (stepText.includes('rotation')) {
-        return "Rotations restructure the tree to improve balance while maintaining the search property.";
-    }
-    return "This step helps maintain the tree's balancing properties.";
 }
 
 // Update visual cues based on current operation
@@ -1446,7 +1629,7 @@ function processQueue() {
         } else {
             avlTree = new AVLTree();
         }
-        steps = [{ text: 'Tree cleared', type: 'success' }];
+        steps = [{ code: 'CLEAR_TREE', text: 'Tree cleared', type: 'success' }];
     }
     
     if (operation.skipAnimation) {
@@ -1465,11 +1648,13 @@ function processQueue() {
     } else {
         // Store the steps for persistence
         lastOperationSteps = steps;
-        animateSteps(steps);
+        // MODIFIED: Pass the operation type to animateSteps
+        animateSteps(steps, operation.type);
     }
 }
 
-function animateSteps(steps) {
+// MODIFIED: Now accepts operationType and passes it to updateAlgorithmDisplay
+function animateSteps(steps, operationType) {
     if (animationTimeout) {
         clearTimeout(animationTimeout);
     }
@@ -1479,14 +1664,16 @@ function animateSteps(steps) {
     function showStep() {
         if (currentStep < steps.length && isPlaying) {
             const step = steps[currentStep];
-            updateAlgorithmDisplay(step, currentStep, steps.length);
+            // MODIFIED: Pass the operationType here
+            updateAlgorithmDisplay(step, currentStep, steps.length, operationType);
             drawTree();
             currentStep++;
             animationTimeout = setTimeout(showStep, animationSpeed);
         } else if (currentStep >= steps.length) {
             // Keep the last step displayed
             const lastStep = steps[steps.length - 1];
-            updateAlgorithmDisplay(lastStep, steps.length - 1, steps.length);
+            // MODIFIED: Pass the operationType here
+            updateAlgorithmDisplay(lastStep, steps.length - 1, steps.length, operationType);
             drawTree();
             
             animationTimeout = setTimeout(() => {
