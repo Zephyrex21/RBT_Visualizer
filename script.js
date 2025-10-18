@@ -981,6 +981,7 @@ if balance > 1 || balance < -1
 
 
 // Global variables
+let algorithmSpeed = 800; 
 let currentTreeType = 'rb';
 let rbTree = new RedBlackTree();
 let avlTree = new AVLTree();
@@ -1506,7 +1507,7 @@ function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
     else if (step.type === 'error') icon = '❌';
     else if (step.type === 'info') icon = 'ℹ️';
     
-    // Update main display only - no longer updating details and pseudocode
+    // Update main display
     display.innerHTML = `
         <div class="current-step">
             <span>${icon}</span>
@@ -1657,17 +1658,22 @@ function animateSteps(steps) {
     function showStep() {
         if (currentStep < steps.length && isPlaying) {
             const step = steps[currentStep];
+            
+            // Update algorithm display immediately
             updateAlgorithmDisplay(step, currentStep, steps.length);
+            
+            // Draw tree at regular animation speed
             drawTree();
             currentStep++;
-            animationTimeout = setTimeout(showStep, animationSpeed);
+            
+            // Use algorithm speed for next step
+            animationTimeout = setTimeout(showStep, algorithmSpeed);
         } else if (currentStep >= steps.length) {
             // Keep the last step displayed
             const lastStep = steps[steps.length - 1];
             updateAlgorithmDisplay(lastStep, steps.length - 1, steps.length);
             drawTree();
             
-            // CRITICAL: Set a flag to indicate animation is complete
             window.animationComplete = true;
             
             animationTimeout = setTimeout(() => {
