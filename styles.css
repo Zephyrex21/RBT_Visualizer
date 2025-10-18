@@ -1874,7 +1874,7 @@ body.light-mode .traversal-result {
 .speed-control {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    margin-left: -0.6rem;
     padding: 0.8rem;
     background: var(--bg-dark);
     border-radius: 0.5rem;
