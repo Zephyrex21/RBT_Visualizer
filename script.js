@@ -1496,8 +1496,7 @@ function updateStats() {
 }
 
 // Update the updateAlgorithmDisplay function
-// MODIFIED: Now accepts operationType as a parameter
-function updateAlgorithmDisplay(step, stepNumber, totalSteps, operationType) {
+function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
     const display = document.getElementById('algorithmDisplay');
     const detailsContent = document.getElementById('detailsContent');
     const algorithmCode = document.getElementById('algorithmCode');
@@ -1509,8 +1508,8 @@ function updateAlgorithmDisplay(step, stepNumber, totalSteps, operationType) {
     else if (step.type === 'error') icon = '❌';
     else if (step.type === 'info') icon = 'ℹ️';
     
-    // Get operation details from the database using the passed operationType
-    const operationKey = `${currentTreeType}_${operationType}`;
+    // Get operation details from the database
+    const operationKey = `${currentTreeType}_${operationQueue.length > 0 && operationQueue[0].type === 'insert' ? 'insert' : 'delete'}`;
     const details = operationDetails[operationKey] && operationDetails[operationKey][step.code];
     
     let explanation = "Perform an operation to see detailed explanations of each step.";
@@ -1544,6 +1543,12 @@ function updateAlgorithmDisplay(step, stepNumber, totalSteps, operationType) {
     
     // Store current step info
     currentStepInfo = { step, stepNumber, totalSteps };
+}
+
+// Helper function to provide reasons for each step (can be removed or integrated)
+function getStepReason(stepText) {
+    // This function is now redundant as explanations are more detailed
+    return "This step helps maintain the tree's balancing properties.";
 }
 
 // Update visual cues based on current operation
@@ -1648,13 +1653,11 @@ function processQueue() {
     } else {
         // Store the steps for persistence
         lastOperationSteps = steps;
-        // MODIFIED: Pass the operation type to animateSteps
-        animateSteps(steps, operation.type);
+        animateSteps(steps);
     }
 }
 
-// MODIFIED: Now accepts operationType and passes it to updateAlgorithmDisplay
-function animateSteps(steps, operationType) {
+function animateSteps(steps) {
     if (animationTimeout) {
         clearTimeout(animationTimeout);
     }
@@ -1664,16 +1667,14 @@ function animateSteps(steps, operationType) {
     function showStep() {
         if (currentStep < steps.length && isPlaying) {
             const step = steps[currentStep];
-            // MODIFIED: Pass the operationType here
-            updateAlgorithmDisplay(step, currentStep, steps.length, operationType);
+            updateAlgorithmDisplay(step, currentStep, steps.length);
             drawTree();
             currentStep++;
             animationTimeout = setTimeout(showStep, animationSpeed);
         } else if (currentStep >= steps.length) {
             // Keep the last step displayed
             const lastStep = steps[steps.length - 1];
-            // MODIFIED: Pass the operationType here
-            updateAlgorithmDisplay(lastStep, steps.length - 1, steps.length, operationType);
+            updateAlgorithmDisplay(lastStep, steps.length - 1, steps.length);
             drawTree();
             
             animationTimeout = setTimeout(() => {
