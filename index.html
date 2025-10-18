@@ -15,6 +15,104 @@
 </head>
 <body>
 
+    <div class="micro-dots">
+        <div class="micro-dot"></div>
+        <div class="micro-dot"></div>
+        <div class="micro-dot"></div>
+        <div class="micro-dot"></div>
+        <div class="micro-dot"></div>
+        <div class="micro-dot"></div>
+        <div class="micro-dot"></div>
+        <div class="micro-dot"></div>
+        <div class="micro-dot"></div>
+        <div class="micro-dot"></div>
+    </div>
+
+    <div class="sparkles">
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+        <div class="sparkle"></div>
+    </div>
+
+    <div class="bubbles">
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+        <div class="bubble"></div>
+    </div>
+
+    <div class="stars">
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+        <div class="star"></div>
+    </div>
+
+    <div class="micro-lines">
+        <div class="micro-line" style="--rotation: 15deg;"></div>
+        <div class="micro-line" style="--rotation: -20deg;"></div>
+        <div class="micro-line" style="--rotation: 30deg;"></div>
+        <div class="micro-line" style="--rotation: -15deg;"></div>
+        <div class="micro-line" style="--rotation: 25deg;"></div>
+        <div class="micro-line" style="--rotation: -30deg;"></div>
+        <div class="micro-line" style="--rotation: 20deg;"></div>
+        <div class="micro-line" style="--rotation: -25deg;"></div>
+    </div>
+
+    <div class="plus-symbols">
+        <div class="plus-symbol"></div>
+        <div class="plus-symbol"></div>
+        <div class="plus-symbol"></div>
+        <div class="plus-symbol"></div>
+        <div class="plus-symbol"></div>
+        <div class="plus-symbol"></div>
+        <div class="plus-symbol"></div>
+        <div class="plus-symbol"></div>
+    </div>
+
+    <!-- Add these right after the body tag --> 
+    <div class="ambient-particles">
+    <div class="ambient-particle"></div>
+    <div class="ambient-particle"></div>
+    <div class="ambient-particle"></div>
+    <div class="ambient-particle"></div>
+    <div class="ambient-particle"></div>
+    <div class="ambient-particle"></div>
+    <div class="ambient-particle"></div>
+    <div class="ambient-particle"></div>
+    <div class="ambient-particle"></div>
+    <div class="ambient-particle"></div>
+    </div>
+
+    <div class="geometric-elements">
+    <div class="geo-shape circle"></div>
+    <div class="geo-shape triangle"></div>
+    <div class="geo-shape square"></div>
+    </div>
+
+    <div class="aurora-bg">
+    <div class="aurora"></div>
+    <div class="aurora"></div>
+    <div class="aurora"></div>
+    </div>
+
     <!-- Update the celestial elements -->
     <div class="celestial-elements">
     <div class="celestial-container" id="celestialContainer">
@@ -45,7 +143,7 @@
     </div>
     </div>
 
-<!-- Add floating particles container -->
+    <!-- Add floating particles container -->
     <div class="floating-particles">
     <div class="particle"></div>
     <div class="particle"></div>
@@ -559,6 +657,90 @@
     </div>
 
     <div class="toast" id="toast"></div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">Red Blackify</h3>
+                <p class="footer-description">Interactive visualization tool for understanding Red-Black Trees and AVL Trees with step-by-step algorithm explanations.</p>
+                <div class="footer-social">
+                    <a href="#" onclick="shareApp(); return false;" class="social-link" aria-label="Share">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                    </a>
+                    <a href="#" onclick="bookmarkPage(); return false;" class="social-link" aria-label="Bookmark">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </a>
+                    <a href="#" onclick="showDocumentation(); return false;" class="social-link" aria-label="Info">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="footer-subtitle">Main Features</h4>
+                <ul class="footer-links">
+                    <li><a href="#visualization" class="footer-link">Tree Visualization</a></li>
+                    <li><a href="#traversal" class="footer-link">Tree Traversals</a></li>
+                    <li><a href="#history" class="footer-link">Operation History</a></li>
+                    <li><a href="#properties" class="footer-link">Tree Properties</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="footer-subtitle">Learning Tools</h4>
+                <ul class="footer-links">
+                    <li><a href="#rules" class="footer-link">Tree Rules</a></li>
+                    <li><a href="#tutorial" class="footer-link">Tutorial</a></li>
+                    <li><a href="#comparison" class="footer-link">RB vs AVL Comparison</a></li>
+                    <li><a href="#" onclick="scrollToAlgorithmPanel(); return false;" class="footer-link">Algorithm Steps</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="footer-subtitle">Quick Actions</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="performQuickAction('generateRandom'); return false;" class="footer-link">Generate Random Tree</a></li>
+                    <li><a href="#" onclick="performQuickAction('clearTree'); return false;" class="footer-link">Clear Tree</a></li>
+                    <li><a href="#" onclick="performQuickAction('switchToRB'); return false;" class="footer-link">Switch to Red-Black</a></li>
+                    <li><a href="#" onclick="performQuickAction('switchToAVL'); return false;" class="footer-link">Switch to AVL</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="footer-copyright">
+                <p>&copy; 2025 Red Blackify.  <br> Built by Saurabh Raj Shekhar CSDS Depart. NSUT</p>
+            </div>
+            <div class="footer-bottom-links">
+                <a href="#" onclick="showDocumentation(); return false;" class="footer-bottom-link">Documentation</a>
+                <a href="#" onclick="showKeyboardShortcuts(); return false;" class="footer-bottom-link">Shortcuts</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Subtle floating elements in footer -->
+    <div class="footer-particles">
+        <div class="footer-particle"></div>
+        <div class="footer-particle"></div>
+        <div class="footer-particle"></div>
+        <div class="footer-particle"></div>
+        <div class="footer-particle"></div>
+    </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>

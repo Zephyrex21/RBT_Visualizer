@@ -2540,6 +2540,10 @@ function initializeApp() {
     initFloatingParticles();
     initThemeParticles();
     initOrbitingElements();
+    initializeBackgroundEffects();
+    initializeTinyElements();
+    initFooterLinks();
+    addScrollIndicator();
     
     // Initialize persistent display variable
     window.persistentOperationDetails = null;
@@ -3175,3 +3179,654 @@ function generateOperationPseudocode(operationType, operationValue, steps) {
 
 // Call the initialize function
 initializeApp();
+
+// Dynamic particle generation
+function initAmbientParticles() {
+    const container = document.querySelector('.ambient-particles');
+    
+    // Add more particles dynamically
+    for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'ambient-particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 20 + 's';
+        particle.style.animationDuration = (Math.random() * 10 + 20) + 's';
+        container.appendChild(particle);
+    }
+}
+
+// Mouse-reactive background
+function initMouseReactiveBackground() {
+    let mouseX = 0;
+    let mouseY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX / window.innerWidth;
+        mouseY = e.clientY / window.innerHeight;
+        
+        // Subtle parallax effect on background elements
+        const particles = document.querySelectorAll('.ambient-particle');
+        particles.forEach((particle, index) => {
+            const speed = (index + 1) * 0.5;
+            const x = (mouseX - 0.5) * speed;
+            const y = (mouseY - 0.5) * speed;
+            particle.style.transform = `translate(${x}px, ${y}px)`;
+        });
+        
+        // Update gradient position based on mouse
+        document.body.style.backgroundPosition = `${mouseX * 50}% ${mouseY * 50}%`;
+    });
+}
+
+// Time-based background changes
+function initTimeBasedBackground() {
+    const hour = new Date().getHours();
+    const body = document.body;
+    
+    if (hour >= 6 && hour < 12) {
+        // Morning - softer colors
+        body.style.filter = 'brightness(1.1) saturate(0.9)';
+    } else if (hour >= 12 && hour < 18) {
+        // Afternoon - normal colors
+        body.style.filter = 'brightness(1) saturate(1)';
+    } else if (hour >= 18 && hour < 22) {
+        // Evening - warmer colors
+        body.style.filter = 'brightness(0.9) saturate(1.1) hue-rotate(-10deg)';
+    } else {
+        // Night - cooler colors
+        body.style.filter = 'brightness(0.8) saturate(0.8) hue-rotate(10deg)';
+    }
+}
+
+// Performance optimization
+function optimizeBackgroundEffects() {
+    // Reduce particles on mobile
+    if (window.innerWidth <= 768) {
+        const particles = document.querySelectorAll('.ambient-particle');
+        particles.forEach((particle, index) => {
+            if (index > 10) particle.remove();
+        });
+    }
+    
+    // Disable animations on low-end devices
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.ambient-particle, .geo-shape, .aurora').forEach(el => {
+            el.style.animation = 'none';
+        });
+    }
+}
+
+// Initialize all background effects
+function initializeBackgroundEffects() {
+    initAmbientParticles();
+    initMouseReactiveBackground();
+    initTimeBasedBackground();
+    optimizeBackgroundEffects();
+    
+    // Update time-based background every hour
+    setInterval(initTimeBasedBackground, 3600000);
+}
+
+
+// Generate random tiny elements
+function generateTinyElements() {
+    const containers = [
+        { selector: '.micro-dots', count: 15, className: 'micro-dot' },
+        { selector: '.sparkles', count: 12, className: 'sparkle' },
+        { selector: '.bubbles', count: 10, className: 'bubble' },
+        { selector: '.stars', count: 8, className: 'star' },
+        { selector: '.micro-lines', count: 6, className: 'micro-line' },
+        { selector: '.plus-symbols', count: 5, className: 'plus-symbol' }
+    ];
+    
+    containers.forEach(container => {
+        const element = document.querySelector(container.selector);
+        if (!element) return;
+        
+        // Clear existing elements
+        element.innerHTML = '';
+        
+        // Generate new elements
+        for (let i = 0; i < container.count; i++) {
+            const el = document.createElement('div');
+            el.className = container.className;
+            
+            // Random position
+            el.style.top = Math.random() * 100 + '%';
+            el.style.left = Math.random() * 100 + '%';
+            
+            // Random animation delay
+            el.style.animationDelay = Math.random() * 5 + 's';
+            
+            // Random animation duration
+            if (container.className === 'bubble') {
+                el.style.width = Math.random() * 2 + 2 + 'px';
+                el.style.height = el.style.width;
+                el.style.animationDuration = (Math.random() * 5 + 10) + 's';
+            } else if (container.className === 'micro-line') {
+                el.style.width = Math.random() * 5 + 5 + 'px';
+                el.style.transform = `rotate(${Math.random() * 60 - 30}deg)`;
+                el.style.setProperty('--rotation', Math.random() * 60 - 30 + 'deg');
+            }
+            
+            element.appendChild(el);
+        }
+    });
+}
+
+// Interactive hover effect for tiny elements
+function initTinyElementInteraction() {
+    const elements = document.querySelectorAll('.micro-dot, .sparkle, .bubble, .star');
+    
+    elements.forEach(element => {
+        element.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.5)';
+            this.style.opacity = '0.5';
+        });
+        
+        element.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.opacity = '';
+        });
+    });
+}
+
+// Performance optimization
+function optimizeTinyElements() {
+    // Reduce elements on mobile
+    if (window.innerWidth <= 768) {
+        const elements = document.querySelectorAll('.micro-dots, .sparkles, .bubbles, .stars, .micro-lines, .plus-symbols');
+        elements.forEach(container => {
+            const children = container.children;
+            for (let i = children.length - 1; i > 5; i--) {
+                children[i].remove();
+            }
+        });
+    }
+    
+    // Disable animations on low-end devices
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.querySelectorAll('.micro-dot, .sparkle, .bubble, .star, .micro-line, .plus-symbol').forEach(el => {
+            el.style.animation = 'none';
+        });
+    }
+}
+
+// Initialize tiny elements
+function initializeTinyElements() {
+    generateTinyElements();
+    initTinyElementInteraction();
+    optimizeTinyElements();
+    
+    // Regenerate elements on window resize
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            generateTinyElements();
+            optimizeTinyElements();
+        }, 250);
+    });
+}
+
+// Enhanced footer link functionality
+function initFooterLinks() {
+    // Smooth scroll for internal links
+    const internalLinks = document.querySelectorAll('.footer-link[href^="#"]');
+    
+    internalLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            scrollToSection(targetId);
+        });
+    });
+}
+
+// Universal scroll to section function with enhanced feedback
+function scrollToSection(sectionId) {
+    const targetElement = document.getElementById(sectionId);
+    
+    if (targetElement) {
+        // Calculate offset to account for fixed headers
+        const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+        const elementPosition = targetElement.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 20;
+        
+        // Smooth scroll to the section
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+        
+        // Wait for scroll to complete before highlighting
+        setTimeout(() => {
+            highlightSection(targetElement);
+        }, 500);
+        
+        // Add a subtle pulse animation to the target section
+        targetElement.style.animation = 'sectionPulse 0.6s ease';
+        setTimeout(() => {
+            targetElement.style.animation = '';
+        }, 600);
+        
+    } else {
+        console.warn(`Section with ID '${sectionId}' not found`);
+        showToast(`Section '${sectionId}' not found`, 'error');
+    }
+}
+
+// Enhanced highlight section function
+function highlightSection(element) {
+    // Remove existing highlights
+    document.querySelectorAll('.section-highlight').forEach(el => {
+        el.classList.remove('section-highlight');
+    });
+    
+    // Add highlight class
+    element.classList.add('section-highlight');
+    
+    // Remove highlight after animation
+    setTimeout(() => {
+        element.classList.remove('section-highlight');
+    }, 2000);
+}
+
+// Highlight section function
+function highlightSection(element) {
+    element.style.transition = 'box-shadow 0.3s ease';
+    element.style.boxShadow = '0 0 20px rgba(59, 130, 246, 0.3)';
+    
+    setTimeout(() => {
+        element.style.boxShadow = '';
+    }, 2000);
+}
+
+// Scroll to algorithm panel
+function scrollToAlgorithmPanel() {
+    const algorithmPanel = document.querySelector('.algorithm-panel');
+    if (algorithmPanel) {
+        algorithmPanel.scrollIntoView({ behavior: 'smooth' });
+        highlightSection(algorithmPanel);
+    } else {
+        showToast('Algorithm panel not found', 'error');
+    }
+}
+
+// Enhanced performQuickAction with loading state
+function performQuickAction(action) {
+    // Find the clicked link
+    const clickedLink = event.target;
+    
+    // Add loading state
+    clickedLink.classList.add('loading');
+    const originalText = clickedLink.textContent;
+    
+    try {
+        switch(action) {
+            case 'generateRandom':
+                if (typeof generateRandom === 'function') {
+                    generateRandom();
+                    showToast('Random tree generated!', 'success');
+                    setTimeout(() => {
+                        scrollToSection('visualization');
+                        removeLoadingState(clickedLink, originalText);
+                    }, 300);
+                } else {
+                    showToast('Generate function not available', 'error');
+                    removeLoadingState(clickedLink, originalText);
+                }
+                break;
+                
+            case 'clearTree':
+                if (typeof clearTree === 'function') {
+                    clearTree();
+                    showToast('Tree cleared!', 'info');
+                    scrollToSection('visualization');
+                    removeLoadingState(clickedLink, originalText);
+                } else {
+                    showToast('Clear function not available', 'error');
+                    removeLoadingState(clickedLink, originalText);
+                }
+                break;
+                
+            case 'switchToRB':
+                if (typeof switchTreeType === 'function') {
+                    switchTreeType('rb');
+                    showToast('Switched to Red-Black Tree', 'success');
+                    setTimeout(() => {
+                        scrollToSection('visualization');
+                        removeLoadingState(clickedLink, originalText);
+                    }, 100);
+                } else {
+                    showToast('Switch function not available', 'error');
+                    removeLoadingState(clickedLink, originalText);
+                }
+                break;
+                
+            case 'switchToAVL':
+                if (typeof switchTreeType === 'function') {
+                    switchTreeType('avl');
+                    showToast('Switched to AVL Tree', 'success');
+                    setTimeout(() => {
+                        scrollToSection('visualization');
+                        removeLoadingState(clickedLink, originalText);
+                    }, 100);
+                } else {
+                    showToast('Switch function not available', 'error');
+                    removeLoadingState(clickedLink, originalText);
+                }
+                break;
+                
+            default:
+                showToast('Unknown action', 'error');
+                removeLoadingState(clickedLink, originalText);
+        }
+    } catch (error) {
+        console.error('Error performing quick action:', error);
+        showToast('Error performing action', 'error');
+        removeLoadingState(clickedLink, originalText);
+    }
+}
+
+// Helper function to remove loading state
+function removeLoadingState(element, originalText) {
+    element.classList.remove('loading');
+    // Restore original text if it was changed
+    if (element.textContent !== originalText) {
+        element.textContent = originalText;
+    }
+}
+
+// Share app function
+function shareApp() {
+    if (navigator.share) {
+        navigator.share({
+            title: 'Red Blackify - Interactive Tree Visualizer',
+            text: 'Check out this amazing Red-Black Tree and AVL Tree visualizer!',
+            url: window.location.href
+        }).then(() => {
+            showToast('Shared successfully!', 'success');
+        }).catch((error) => {
+            console.log('Share cancelled or failed:', error);
+        });
+    } else {
+        // Fallback for browsers that don't support Web Share API
+        const dummy = document.createElement('input');
+        document.body.appendChild(dummy);
+        dummy.value = window.location.href;
+        dummy.select();
+        document.execCommand('copy');
+        document.body.removeChild(dummy);
+        showToast('Link copied to clipboard!', 'success');
+    }
+}
+
+// Bookmark page function
+function bookmarkPage() {
+    if (window.sidebar && window.sidebar.addPanel) {
+        // Firefox
+        window.sidebar.addPanel('Red Blackify', window.location.href, '');
+    } else if (window.external && ('AddFavorite' in window.external)) {
+        // IE
+        window.external.AddFavorite(window.location.href, 'Red Blackify');
+    } else if (window.opera && window.print) {
+        // Opera
+        this.title = 'Red Blackify';
+        return true;
+    } else {
+        // WebKit - Safari, Chrome
+        alert('Press ' + (navigator.userAgent.toLowerCase().indexOf('mac') != -1 ? 'Cmd' : 'Ctrl') + '+D to bookmark this page.');
+    }
+    showToast('Bookmark this page for easy access!', 'info');
+}
+
+// Documentation modal function
+function showDocumentation() {
+    // Remove existing modal if any
+    const existingModal = document.querySelector('.documentation-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'documentation-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    `;
+    
+    const content = document.createElement('div');
+    content.style.cssText = `
+        background: var(--bg-light);
+        padding: 2rem;
+        border-radius: 1rem;
+        max-width: 600px;
+        max-height: 80vh;
+        overflow-y: auto;
+        position: relative;
+    `;
+    
+    content.innerHTML = `
+        <h2 style="color: var(--accent); margin-bottom: 1rem;">Red Blackify Documentation</h2>
+        <div style="color: var(--text-secondary); line-height: 1.6;">
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem;">Getting Started</h3>
+            <p>Red Blackify is an interactive visualization tool for understanding Red-Black Trees and AVL Trees.</p>
+            
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem;">Features</h3>
+            <ul>
+                <li>Interactive tree visualization</li>
+                <li>Step-by-step algorithm explanations</li>
+                <li>Support for both Red-Black and AVL trees</li>
+                <li>Tree traversal animations</li>
+                <li>Operation history tracking</li>
+                <li>Tree comparison tools</li>
+            </ul>
+            
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem;">How to Use</h3>
+            <ol>
+                <li>Enter a value and click "Insert" to add nodes</li>
+                <li>Enter a value and click "Delete" to remove nodes</li>
+                <li>Use "Search" to find specific nodes</li>
+                <li>Click "Generate Random" to create a sample tree</li>
+                <li>Switch between Red-Black and AVL trees to compare</li>
+                <li>Visualize traversals to understand different algorithms</li>
+            </ol>
+            
+            <h3 style="color: var(--text-primary); margin-top: 1.5rem;">Keyboard Shortcuts</h3>
+            <ul>
+                <li><kbd>Enter</kbd> - Perform action when input is focused</li>
+            </ul>
+        </div>
+        
+        <button onclick="this.parentElement.parentElement.remove()" style="
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        ">×</button>
+    `;
+    
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+    
+    // Close modal with Escape key
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
+
+// Keyboard shortcuts modal
+function showKeyboardShortcuts() {
+    // Remove existing modal if any
+    const existingModal = document.querySelector('.shortcuts-modal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'shortcuts-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+    `;
+    
+    const content = document.createElement('div');
+    content.style.cssText = `
+        background: var(--bg-light);
+        padding: 2rem;
+        border-radius: 1rem;
+        max-width: 500px;
+        position: relative;
+    `;
+    
+    content.innerHTML = `
+        <h2 style="color: var(--accent); margin-bottom: 1rem;">Keyboard Shortcuts</h2>
+        <div style="color: var(--text-secondary); line-height: 1.6;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 0.5rem; border-bottom: 1px solid var(--border);"><kbd>Enter</kbd></td>
+                    <td style="padding: 0.5rem; border-bottom: 1px solid var(--border);">Perform action when input is focused</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem; border-bottom: 1px solid var(--border);"><kbd>Tab</kbd></td>
+                    <td style="padding: 0.5rem; border-bottom: 1px solid var(--border);">Navigate between inputs</td>
+                </tr>
+                <tr>
+                    <td style="padding: 0.5rem; border-bottom: 1px solid var(--border);"><kbd>Esc</kbd></td>
+                    <td style="padding: 0.5rem; border-bottom: 1px solid var(--border);">Close modals</td>
+                </tr>
+            </table>
+        </div>
+        
+        <button onclick="this.parentElement.parentElement.remove()" style="
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        ">×</button>
+    `;
+    
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
+    
+    // Close modal with Escape key
+    const escapeHandler = (e) => {
+        if (e.key === 'Escape') {
+            modal.remove();
+            document.removeEventListener('keydown', escapeHandler);
+        }
+    };
+    document.addEventListener('keydown', escapeHandler);
+}
+
+// Add footer scroll indicator
+function addScrollIndicator() {
+    // Remove existing indicator if any
+    const existingIndicator = document.querySelector('.footer-scroll-indicator');
+    if (existingIndicator) {
+        existingIndicator.remove();
+    }
+    
+    const footer = document.querySelector('.footer');
+    if (!footer) return;
+    
+    const indicator = document.createElement('div');
+    indicator.className = 'footer-scroll-indicator';
+    indicator.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        background: var(--accent);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.3s ease;
+        z-index: 1000;
+    `;
+    
+    indicator.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+            <path d="M12 5v14M19 12l-7 7-7-7"/>
+        </svg>
+    `;
+    
+    indicator.title = 'Go to footer';
+    
+    indicator.addEventListener('click', () => {
+        footer.scrollIntoView({ behavior: 'smooth' });
+    });
+    
+    document.body.appendChild(indicator);
+    
+    // Show/hide indicator based on scroll position
+    const scrollHandler = () => {
+        const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+        
+        if (scrollPercentage > 50) {
+            indicator.style.opacity = '0';
+            indicator.style.transform = 'translateY(20px)';
+        } else {
+            indicator.style.opacity = '1';
+            indicator.style.transform = 'translateY(0)';
+        }
+    };
+    
+    window.addEventListener('scroll', scrollHandler);
+}
+
+
