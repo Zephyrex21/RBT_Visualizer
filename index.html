@@ -125,6 +125,16 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Rules Section moved here -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <span id="rulesTitle">📋</span> <span id="rulesTitleText">Red-Black Tree Rules</span>
+                    </div>
+                    <div class="rules-list" id="rulesList">
+                        <!-- Rules will be dynamically inserted here -->
+                    </div>
+                </div>
             </div>
 
             <!-- Visualization Panel (Center) -->
@@ -393,113 +403,103 @@
             </div>
         </div>
 
-        <div class="bottom-sections">
-            <div class="small-panel" id="rules">
-                <div class="panel-header">
-                    <span id="rulesTitle">📋</span> <span id="rulesTitleText">Red-Black Tree Rules</span>
-                </div>
-                <div class="rules-list" id="rulesList">
-                    <!-- Rules will be dynamically inserted here -->
-                </div>
-            </div>
-
-            <div class="small-panel" id="comparison">
-                <h2 style="text-align: center; margin-bottom: 1rem; color: var(--accent); font-size: 1.5rem;">Red-Black Tree vs AVL Tree</h2>
-                <div class="comparison-grid">
-                    <div class="comparison-card">
-                        <div class="tree-type rb-tree">Red-Black Tree</div>
-                        <div class="metric">
-                            <span class="metric-label">Balance Factor</span>
-                            <span class="metric-value">±1 (approximate)</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Insertion</span>
-                            <span class="metric-value">O(log n)</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Deletion</span>
-                            <span class="metric-value">O(log n)</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Search</span>
-                            <span class="metric-value">O(log n)</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Rotations</span>
-                            <span class="metric-value">≤ 2 rotations</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Color Changes</span>
-                            <span class="metric-value">O(1)</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Use Case</span>
-                            <span class="metric-value">General purpose</span>
-                        </div>
+        <!-- Comparison Section - Horizontal Layout -->
+        <div class="comparison-section" id="comparison">
+            <h2 style="text-align: center; margin-bottom: 1rem; color: var(--accent); font-size: 1.5rem;">Red-Black Tree vs AVL Tree</h2>
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <div class="tree-type rb-tree">Red-Black Tree</div>
+                    <div class="metric">
+                        <span class="metric-label">Balance Factor</span>
+                        <span class="metric-value">±1 (approximate)</span>
                     </div>
-
-                    <div class="comparison-card">
-                        <div class="tree-type avl-tree">AVL Tree</div>
-                        <div class="metric">
-                            <span class="metric-label">Balance Factor</span>
-                            <span class="metric-value">Exactly ±1</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Insertion</span>
-                            <span class="metric-value">O(log n)</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Deletion</span>
-                            <span class="metric-value">O(log n)</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Search</span>
-                            <span class="metric-value">O(log n)</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Rotations</span>
-                            <span class="metric-value">Multiple rotations</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Color Changes</span>
-                            <span class="metric-value">N/A</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Use Case</span>
-                            <span class="metric-value">Read-heavy</span>
-                        </div>
+                    <div class="metric">
+                        <span class="metric-label">Insertion</span>
+                        <span class="metric-value">O(log n)</span>
                     </div>
+                    <div class="metric">
+                        <span class="metric-label">Deletion</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Search</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Rotations</span>
+                        <span class="metric-value">≤ 2 rotations</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Color Changes</span>
+                        <span class="metric-value">O(1)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Use Case</span>
+                        <span class="metric-value">General purpose</span>
+                    </div>
+                </div>
 
-                    <div class="comparison-card">
-                        <div class="tree-type" style="color: var(--success);">Performance Analysis</div>
-                        <div class="metric">
-                            <span class="metric-label">Memory</span>
-                            <span class="metric-value">RB: +1 bit per node</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Insert Speed</span>
-                            <span class="metric-value">RB: Faster</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Delete Speed</span>
-                            <span class="metric-value">RB: Faster</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Search Speed</span>
-                            <span class="metric-value">AVL: Slightly faster</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Implementation</span>
-                            <span class="metric-value">RB: More complex</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Tree Height</span>
-                            <span class="metric-value">AVL: More balanced</span>
-                        </div>
-                        <div class="metric">
-                            <span class="metric-label">Popular Use</span>
-                            <span class="metric-value">RB: Linux scheduler</span>
-                        </div>
+                <div class="comparison-card">
+                    <div class="tree-type avl-tree">AVL Tree</div>
+                    <div class="metric">
+                        <span class="metric-label">Balance Factor</span>
+                        <span class="metric-value">Exactly ±1</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Insertion</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Deletion</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Search</span>
+                        <span class="metric-value">O(log n)</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Rotations</span>
+                        <span class="metric-value">Multiple rotations</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Color Changes</span>
+                        <span class="metric-value">N/A</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Use Case</span>
+                        <span class="metric-value">Read-heavy</span>
+                    </div>
+                </div>
+
+                <div class="comparison-card">
+                    <div class="tree-type" style="color: var(--success);">Performance Analysis</div>
+                    <div class="metric">
+                        <span class="metric-label">Memory</span>
+                        <span class="metric-value">RB: +1 bit per node</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Insert Speed</span>
+                        <span class="metric-value">RB: Faster</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Delete Speed</span>
+                        <span class="metric-value">RB: Faster</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Search Speed</span>
+                        <span class="metric-value">AVL: Slightly faster</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Implementation</span>
+                        <span class="metric-value">RB: More complex</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Tree Height</span>
+                        <span class="metric-value">AVL: More balanced</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Popular Use</span>
+                        <span class="metric-value">RB: Linux scheduler</span>
                     </div>
                 </div>
             </div>
