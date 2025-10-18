@@ -797,6 +797,41 @@ const avlInsertAlgorithm = `AVL-Insert(T, k):
    - LR: Left-Right rotate
    - RL: Right-Left rotate`;
 
+// Add detailed explanations for each operation
+const algorithmExplanations = {
+    rbInsert: {
+        initial: "Starting Red-Black Tree insertion. We'll insert the new node as RED and then fix any violations of the Red-Black properties.",
+        step1: "New node inserted as RED. This maintains the black-height property but may violate the rule that red nodes can't have red children.",
+        case1: "UNCLE IS RED: Both parent and uncle are red. We recolor them to black and grandparent to red. This fixes the violation at this level but may introduce one higher up.",
+        case2: "TRIANGLE FORMATION: Node forms a triangle with its parent and grandparent. We perform a rotation to align them in a straight line before the final rotation.",
+        case3: "LINE FORMATION: Node, parent, and grandparent are in a straight line. We rotate the grandparent and recolor to restore all Red-Black properties.",
+        complete: "Insertion complete! The tree now satisfies all Red-Black properties: root is black, red nodes have black children, and all paths have equal black height."
+    },
+    rbDelete: {
+        initial: "Starting Red-Black Tree deletion. We'll remove the node and fix any violations of the Red-Black properties.",
+        step1: "Node found and removed. If the removed node was black, we may have violated the black-height property.",
+        case1: "SIBLING IS RED: Recolor sibling and parent, then rotate. This gives us a black sibling to work with in the next steps.",
+        case2: "BOTH NEPHEWS BLACK: Recolor sibling to red. This reduces the black height of the sibling's subtree, matching our side.",
+        case3: "FAR NEPHEW BLACK, NEAR NEPHEW RED: Rotate near nephew, recolor, then handle as case 4. This sets up for the final rotation.",
+        case4: "FAR NEPHEW RED: Recolor sibling to match parent, far nephew to black, then rotate. This restores the black height.",
+        complete: "Deletion complete! The tree now satisfies all Red-Black properties."
+    },
+    avlInsert: {
+        initial: "Starting AVL Tree insertion. We'll insert the node and then check balance factors to ensure the tree remains balanced.",
+        step1: "New node inserted. Now checking balance factors from the insertion point up to the root.",
+        ll: "LEFT-LEFT CASE: Tree is left-heavy and left child is also left-heavy. A single right rotation will balance this subtree.",
+        rr: "RIGHT-RIGHT CASE: Tree is right-heavy and right child is also right-heavy. A single left rotation will balance this subtree.",
+        lr: "LEFT-RIGHT CASE: Tree is left-heavy but left child is right-heavy. We need a left rotation on the left child, then a right rotation.",
+        rl: "RIGHT-LEFT CASE: Tree is right-heavy but right child is left-heavy. We need a right rotation on the right child, then a left rotation.",
+        complete: "Insertion complete! All nodes have balance factors of -1, 0, or 1, ensuring O(log n) height."
+    },
+    avlDelete: {
+        initial: "Starting AVL Tree deletion. We'll remove the node and rebalance the tree if necessary.",
+        step1: "Node removed. Now checking balance factors and rebalancing as needed.",
+        complete: "Deletion complete! The tree is balanced and maintains AVL properties."
+    }
+};
+
 // Initialize rules display
 function updateRulesDisplay() {
     const rulesList = document.getElementById('rulesList');
@@ -1230,8 +1265,11 @@ function updateStats() {
     }
 }
 
+// Update the updateAlgorithmDisplay function
 function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
     const display = document.getElementById('algorithmDisplay');
+    const detailsContent = document.getElementById('detailsContent');
+    const cuesContent = document.getElementById('cuesContent');
     
     let icon = '✨';
     if (step.type === 'success') icon = '✅';
@@ -1239,7 +1277,48 @@ function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
     else if (step.type === 'error') icon = '❌';
     else if (step.type === 'info') icon = 'ℹ️';
     
-    const algorithmCode = currentTreeType === 'rb' ? rbInsertAlgorithm : avlInsertAlgorithm;
+    // Determine which explanation to show
+    let explanation = '';
+    let visualCue = '';
+    
+    if (currentTreeType === 'rb') {
+        if (step.text.includes('Inserting')) {
+            explanation = algorithmExplanations.rbInsert.initial;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔴</span><span class="step-visual-text">New node will be inserted as RED</span></div>';
+        } else if (step.text.includes('Case 1: Uncle is red')) {
+            explanation = algorithmExplanations.rbInsert.case1;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">🎨</span><span class="step-visual-text">Recoloring parent and uncle to BLACK</span></div>';
+        } else if (step.text.includes('Case 2: Triangle')) {
+            explanation = algorithmExplanations.rbInsert.case2;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔄</span><span class="step-visual-text">Rotating to align nodes in a line</span></div>';
+        } else if (step.text.includes('Case 3: Line')) {
+            explanation = algorithmExplanations.rbInsert.case3;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">⚖️</span><span class="step-visual-text">Final rotation and recoloring</span></div>';
+        } else if (step.text.includes('Tree balanced')) {
+            explanation = algorithmExplanations.rbInsert.complete;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">✅</span><span class="step-visual-text">All Red-Black properties satisfied</span></div>';
+        }
+    } else {
+        if (step.text.includes('Inserting')) {
+            explanation = algorithmExplanations.avlInsert.initial;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔵</span><span class="step-visual-text">New node inserted, checking balance</span></div>';
+        } else if (step.text.includes('Left-Left case')) {
+            explanation = algorithmExplanations.avlInsert.ll;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">↩️</span><span class="step-visual-text">Performing right rotation</span></div>';
+        } else if (step.text.includes('Right-Right case')) {
+            explanation = algorithmExplanations.avlInsert.rr;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">↪️</span><span class="step-visual-text">Performing left rotation</span></div>';
+        } else if (step.text.includes('Left-Right case')) {
+            explanation = algorithmExplanations.avlInsert.lr;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔄</span><span class="step-visual-text">Performing left-right rotation</span></div>';
+        } else if (step.text.includes('Right-Left case')) {
+            explanation = algorithmExplanations.avlInsert.rl;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">🔄</span><span class="step-visual-text">Performing right-left rotation</span></div>';
+        } else if (step.text.includes('complete')) {
+            explanation = algorithmExplanations.avlInsert.complete;
+            visualCue = '<div class="step-visual"><span class="step-visual-icon">✅</span><span class="step-visual-text">Tree is balanced</span></div>';
+        }
+    }
     
     display.innerHTML = `
         <div class="current-step">
@@ -1248,11 +1327,88 @@ function updateAlgorithmDisplay(step, stepNumber, totalSteps) {
             <span class="step-type ${step.type}">${step.type}</span>
         </div>
         <div class="step-description">Step ${stepNumber + 1} of ${totalSteps}</div>
-        <div class="algorithm-code">${algorithmCode}</div>
+        ${visualCue}
     `;
+    
+    // Update detailed explanation
+    detailsContent.innerHTML = `
+        <p>${explanation}</p>
+        <div class="step-explanation">
+            <strong>Why this step is necessary:</strong> ${getStepReason(step.text)}
+        </div>
+    `;
+    
+    // Update visual cues based on current operation
+    updateVisualCues(cuesContent, step);
     
     // Store current step info
     currentStepInfo = { step, stepNumber, totalSteps };
+}
+
+// Helper function to provide reasons for each step
+function getStepReason(stepText) {
+    if (stepText.includes('Inserting')) {
+        return "We need to add the new node while maintaining the tree's search property and balance.";
+    } else if (stepText.includes('Uncle is red')) {
+        return "Having two red nodes in a row violates Red-Black rules. Recoloring pushes the violation up the tree.";
+    } else if (stepText.includes('Triangle')) {
+        return "The triangle formation prevents a simple rotation. We first need to align the nodes.";
+    } else if (stepText.includes('Line')) {
+        return "With nodes aligned, a single rotation and recoloring will restore all properties.";
+    } else if (stepText.includes('balance factor')) {
+        return "AVL trees require balance factors to be -1, 0, or 1 to maintain O(log n) height.";
+    } else if (stepText.includes('rotation')) {
+        return "Rotations restructure the tree to improve balance while maintaining the search property.";
+    }
+    return "This step helps maintain the tree's balancing properties.";
+}
+
+// Update visual cues based on current operation
+function updateVisualCues(cuesContent, step) {
+    let cuesHTML = '';
+    
+    if (currentTreeType === 'rb') {
+        cuesHTML = `
+            <div class="cue-item">
+                <div class="cue-color red"></div>
+                <span>Red Node - Newly inserted or needs fixing</span>
+            </div>
+            <div class="cue-item">
+                <div class="cue-color black"></div>
+                <span>Black Node - Balanced part of tree</span>
+            </div>
+            <div class="cue-item">
+                <div class="cue-color highlight"></div>
+                <span>Highlighted - Currently being processed</span>
+            </div>
+        `;
+        
+        if (step.text.includes('uncle')) {
+            cuesHTML += `
+                <div class="cue-item">
+                    <div class="cue-color" style="background: #f59e0b;"></div>
+                    <span>Uncle Node - Key to fixing violations</span>
+                </div>
+            `;
+        }
+    } else {
+        cuesHTML = `
+            <div class="cue-item">
+                <div class="cue-color" style="background: #3b82f6;"></div>
+                <span>Node - Balance factor shown in green</span>
+            </div>
+            <div class="cue-item">
+                <div class="cue-color highlight"></div>
+                <span>Highlighted - Currently being processed</span>
+            </div>
+            <div class="cue-item">
+                <div class="cue-color" style="background: #10b981;"></div>
+                <span>Balance Factor - Must be -1, 0, or 1</span>
+            </div>
+        `;
+    }
+    
+    cuesContent.innerHTML = cuesHTML;
 }
 
 function resetOperationState() {
@@ -2120,6 +2276,28 @@ function initMobileMenu() {
             
             document.getElementById('mobilePanelClose').addEventListener('click', () => {
                 rightPanel.classList.remove('mobile-visible');
+            });
+        }
+    }
+    
+    // Show algorithm panel
+    function showMobileAlgorithm() {
+        const algorithmPanel = document.querySelector('.algorithm-panel');
+        algorithmPanel.classList.add('mobile-visible');
+        closeMobileMenu();
+        
+        // Add close button to algorithm panel
+        if (!document.getElementById('mobileAlgorithmClose')) {
+            const panelHeader = document.createElement('div');
+            panelHeader.className = 'mobile-panel-header';
+            panelHeader.innerHTML = `
+                <div class="mobile-panel-title">Algorithm Steps</div>
+                <button class="mobile-panel-close" id="mobileAlgorithmClose">×</button>
+            `;
+            algorithmPanel.insertBefore(panelHeader, algorithmPanel.firstChild);
+            
+            document.getElementById('mobileAlgorithmClose').addEventListener('click', () => {
+                algorithmPanel.classList.remove('mobile-visible');
             });
         }
     }

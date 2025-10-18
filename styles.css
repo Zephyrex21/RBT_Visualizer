@@ -155,11 +155,19 @@ body.light-mode .theme-switch-slider {
     font-size: 14px;
 }
 
+/* Update the main layout grid */
 .main-layout {
     display: grid;
-    grid-template-columns: 1fr 380px;
+    grid-template-columns: 350px 1fr 350px;
     gap: 1.5rem;
     margin-bottom: 1.5rem;
+}
+
+/* New algorithm panel styles */
+.algorithm-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .visualization-panel {
@@ -465,23 +473,198 @@ body.light-mode .metric-value {
     color: var(--light-text-primary);
 }
 
+.algorithm-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    flex-grow: 1;
+}
+
 .algorithm-display {
     background: var(--bg-dark);
     border-radius: 0.5rem;
     padding: 1.5rem;
     border: 1px solid var(--border);
-    margin-top: 0;
-    min-height: 280px;
+    min-height: 200px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    flex-grow: 1;
     transition: background 0.3s ease, border 0.3s ease;
 }
 
 body.light-mode .algorithm-display {
     background: var(--light-bg-tertiary);
     border-color: var(--light-border);
+}
+
+.algorithm-details {
+    background: var(--bg-dark);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    transition: background 0.3s ease, border 0.3s ease;
+}
+
+body.light-mode .algorithm-details {
+    background: var(--light-bg-tertiary);
+    border-color: var(--light-border);
+}
+
+.details-title {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+body.light-mode .details-title {
+    color: var(--light-accent);
+}
+
+.details-content {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    transition: color 0.3s ease;
+}
+
+body.light-mode .details-content {
+    color: var(--light-text-secondary);
+}
+
+.details-content p {
+    margin-bottom: 0.5rem;
+}
+
+.details-content p:last-child {
+    margin-bottom: 0;
+}
+
+.visual-cues {
+    background: var(--bg-dark);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    border: 1px solid var(--border);
+    transition: background 0.3s ease, border 0.3s ease;
+}
+
+body.light-mode .visual-cues {
+    background: var(--light-bg-tertiary);
+    border-color: var(--light-border);
+}
+
+.cues-title {
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+body.light-mode .cues-title {
+    color: var(--light-accent);
+}
+
+.cues-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cue-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    transition: color 0.3s ease;
+}
+
+body.light-mode .cue-item {
+    color: var(--light-text-secondary);
+}
+
+.cue-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+body.light-mode .cue-color {
+    border-color: var(--light-border);
+}
+
+.cue-color.red {
+    background: var(--primary);
+}
+
+body.light-mode .cue-color.red {
+    background: var(--light-primary);
+}
+
+.cue-color.black {
+    background: var(--secondary);
+}
+
+.cue-color.highlight {
+    background: var(--accent);
+}
+
+body.light-mode .cue-color.highlight {
+    background: var(--light-accent);
+}
+
+/* Enhanced step display */
+.step-explanation {
+    background: rgba(59, 130, 246, 0.1);
+    border-left: 3px solid var(--accent);
+    padding: 0.75rem;
+    margin-top: 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+body.light-mode .step-explanation {
+    background: rgba(59, 130, 246, 0.05);
+    color: var(--light-text-primary);
+}
+
+.step-visual {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: var(--bg-light);
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+}
+
+body.light-mode .step-visual {
+    background: var(--light-bg-secondary);
+}
+
+.step-visual-icon {
+    font-size: 1.2rem;
+}
+
+.step-visual-text {
+    color: var(--text-secondary);
+}
+
+body.light-mode .step-visual-text {
+    color: var(--light-text-secondary);
 }
 
 .current-step {
@@ -1283,12 +1466,6 @@ body.light-mode .step-title {
 
 body.light-mode .step-description {
     color: var(--light-text-secondary);
-}
-
-.algorithm-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
 }
 
 .tips-section {
@@ -2271,29 +2448,27 @@ body.light-mode .mobile-panel-close {
 
 /* Responsive Design */
 @media (max-width: 1400px) {
-    .container {
-        max-width: 1200px;
+    .main-layout {
+        grid-template-columns: 280px 1fr 340px;
     }
 }
 
 @media (max-width: 1200px) {
     .main-layout {
         grid-template-columns: 1fr;
-    }
-    
-    .right-panel {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         gap: 1rem;
     }
     
-    .bottom-sections {
-        grid-template-columns: 1fr;
+    .algorithm-panel {
+        order: 2;
     }
     
-    .properties-grid,
-    .key-points {
-        grid-template-columns: repeat(2, 1fr);
+    .visualization-panel {
+        order: 1;
+    }
+    
+    .right-panel {
+        order: 3;
     }
 }
 
@@ -2648,6 +2823,27 @@ body.light-mode .mobile-panel-close {
     
     .mobile-panel-header {
         display: flex;
+    }
+    
+    .algorithm-panel {
+        display: none;
+    }
+    
+    .algorithm-panel.mobile-visible {
+        display: flex;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg-light);
+        z-index: 998;
+        overflow-y: auto;
+        padding: 1rem;
+    }
+    
+    body.light-mode .algorithm-panel.mobile-visible {
+        background: var(--light-bg-secondary);
     }
     
     .container {
