@@ -3777,3 +3777,291 @@ body.light-mode .algorithm-code {
 }
 
 /* ... (rest of your responsive CSS) ... */
+
+/* Celestial Elements - Scrolling Theme Switcher */
+.celestial-elements {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    pointer-events: auto;
+}
+
+.celestial-container {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    backdrop-filter: blur(2px);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    padding: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Moon Styles - Smaller Size */
+.moon {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f4f4f4 0%, #e0e0e0 50%, #d0d0d0 100%);
+    box-shadow: 
+        0 0 15px rgba(255, 255, 255, 0.5),
+        0 0 30px rgba(255, 255, 255, 0.3),
+        0 0 45px rgba(255, 255, 255, 0.1),
+        inset -7px -7px 15px rgba(0, 0, 0, 0.1);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all 0.5s ease;
+    animation: moonGlow 3s ease-in-out infinite alternate;
+    pointer-events: none;
+}
+
+body:not(.light-mode) .moon {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body.light-mode .moon {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8) rotate(180deg);
+    pointer-events: none;
+}
+
+/* Sun Styles - Smaller Size */
+.sun {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #ffeb3b 0%, #ffc107 60%, #ff9800 100%);
+    box-shadow: 
+        0 0 15px rgba(255, 193, 7, 0.5),
+        0 0 30px rgba(255, 193, 7, 0.3),
+        0 0 45px rgba(255, 193, 7, 0.1);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all 0.5s ease;
+    animation: sunRotate 20s linear infinite;
+    pointer-events: none;
+}
+
+body.light-mode .sun {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body:not(.light-mode) .sun {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8) rotate(-180deg);
+    pointer-events: none;
+}
+
+/* Smaller moon craters */
+.moon-crater:nth-child(1) {
+    width: 10px;
+    height: 10px;
+    top: 15px;
+    left: 18px;
+}
+
+.moon-crater:nth-child(2) {
+    width: 7px;
+    height: 7px;
+    top: 28px;
+    left: 32px;
+}
+
+.moon-crater:nth-child(3) {
+    width: 5px;
+    height: 5px;
+    top: 35px;
+    left: 15px;
+}
+
+/* Smaller sun rays */
+.sun-ray {
+    position: absolute;
+    background: linear-gradient(to bottom, rgba(255, 193, 7, 0.8), transparent);
+    transform-origin: center bottom;
+}
+
+.sun-ray:nth-child(1) {
+    width: 3px;
+    height: 15px;
+    top: -18px;
+    left: 26px;
+    transform: rotate(0deg);
+}
+
+.sun-ray:nth-child(2) {
+    width: 3px;
+    height: 15px;
+    top: -18px;
+    left: 26px;
+    transform: rotate(45deg);
+}
+
+.sun-ray:nth-child(3) {
+    width: 3px;
+    height: 15px;
+    top: -18px;
+    left: 26px;
+    transform: rotate(90deg);
+}
+
+.sun-ray:nth-child(4) {
+    width: 3px;
+    height: 15px;
+    top: -18px;
+    left: 26px;
+    transform: rotate(135deg);
+}
+
+.sun-ray:nth-child(5) {
+    width: 3px;
+    height: 15px;
+    bottom: -18px;
+    left: 26px;
+    transform: rotate(180deg);
+}
+
+.sun-ray:nth-child(6) {
+    width: 3px;
+    height: 15px;
+    bottom: -18px;
+    left: 26px;
+    transform: rotate(225deg);
+}
+
+.sun-ray:nth-child(7) {
+    width: 3px;
+    height: 15px;
+    bottom: -18px;
+    left: 26px;
+    transform: rotate(270deg);
+}
+
+.sun-ray:nth-child(8) {
+    width: 3px;
+    height: 15px;
+    bottom: -18px;
+    left: 26px;
+    transform: rotate(315deg);
+}
+
+/* Responsive adjustments for smaller celestial elements */
+@media (max-width: 768px) {
+    .celestial-elements {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .celestial-container {
+        width: 60px;
+        height: 60px;
+        padding: 6px;
+    }
+    
+    .moon, .sun {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .moon-crater:nth-child(1) {
+        width: 8px;
+        height: 8px;
+        top: 12px;
+        left: 15px;
+    }
+    
+    .moon-crater:nth-child(2) {
+        width: 6px;
+        height: 6px;
+        top: 23px;
+        left: 27px;
+    }
+    
+    .moon-crater:nth-child(3) {
+        width: 4px;
+        height: 4px;
+        top: 29px;
+        left: 12px;
+    }
+    
+    .sun-ray {
+        width: 2px;
+        height: 12px;
+    }
+    
+    .sun-ray:nth-child(1), .sun-ray:nth-child(2), .sun-ray:nth-child(3), .sun-ray:nth-child(4) {
+        top: -15px;
+        left: 21.5px;
+    }
+    
+    .sun-ray:nth-child(5), .sun-ray:nth-child(6), .sun-ray:nth-child(7), .sun-ray:nth-child(8) {
+        bottom: -15px;
+        left: 21.5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .celestial-elements {
+        top: 5px;
+        right: 5px;
+    }
+    
+    .celestial-container {
+        width: 50px;
+        height: 50px;
+        padding: 5px;
+    }
+    
+    .moon, .sun {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .moon-crater:nth-child(1) {
+        width: 7px;
+        height: 7px;
+        top: 10px;
+        left: 13px;
+    }
+    
+    .moon-crater:nth-child(2) {
+        width: 5px;
+        height: 5px;
+        top: 20px;
+        left: 24px;
+    }
+    
+    .moon-crater:nth-child(3) {
+        width: 4px;
+        height: 4px;
+        top: 26px;
+        left: 11px;
+    }
+    
+    .sun-ray {
+        width: 2px;
+        height: 10px;
+    }
+    
+    .sun-ray:nth-child(1), .sun-ray:nth-child(2), .sun-ray:nth-child(3), .sun-ray:nth-child(4) {
+        top: -12px;
+        left: 19px;
+    }
+    
+    .sun-ray:nth-child(5), .sun-ray:nth-child(6), .sun-ray:nth-child(7), .sun-ray:nth-child(8) {
+        bottom: -12px;
+        left: 19px;
+    }
+}
+

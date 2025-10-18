@@ -2010,12 +2010,24 @@ function clearTree() {
         <div class="step-description">Ready to perform new operations</div>
     `;
     
-    // Update history
-    addToHistory('Clear Tree', null, 'clear');
-    showToast('Tree cleared', 'info');
+    // Update statistics with explicit reset
+    document.getElementById('nodeCount').textContent = '0';
+    document.getElementById('treeHeight').textContent = '0';
+    
+    if (currentTreeType === 'rb') {
+        document.getElementById('treeStat').textContent = '0';
+        document.getElementById('treeStatLabel').textContent = 'Black Height';
+    } else {
+        document.getElementById('treeStat').textContent = '-';
+        document.getElementById('treeStatLabel').textContent = 'Balance Factor';
+    }
     
     // Update traversal results
     updateTraversalResults();
+    
+    // Update history
+    addToHistory('Clear Tree', null, 'clear');
+    showToast('Tree cleared', 'info');
     
     // Enable buttons
     setButtonsEnabled(true);
@@ -2517,5 +2529,286 @@ function initializeApp() {
     initMobileMenu();
 }
 
+// Particle System for Dark Mode
+class ParticleSystem {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.resize();
+        this.init();
+        
+        window.addEventListener('resize', () => this.resize());
+    }
+    
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+    
+    init() {
+        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 15000);
+        
+        for (let i = 0; i < particleCount; i++) {
+            this.particles.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                size: Math.random() * 2 + 0.5,
+                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: (Math.random() - 0.5) * 0.3,
+                opacity: Math.random() * 0.8 + 0.2,
+                twinkleSpeed: Math.random() * 0.02 + 0.01
+            });
+        }
+    }
+    
+    update() {
+        this.particles.forEach(particle => {
+            particle.x += particle.speedX;
+            particle.y += particle.speedY;
+            
+            // Wrap around edges
+            if (particle.x < 0) particle.x = this.canvas.width;
+            if (particle.x > this.canvas.width) particle.x = 0;
+            if (particle.y < 0) particle.y = this.canvas.height;
+            if (particle.y > this.canvas.height) particle.y = 0;
+            
+            // Twinkle effect
+            particle.opacity += particle.twinkleSpeed;
+            if (particle.opacity > 1 || particle.opacity < 0.2) {
+                particle.twinkleSpeed = -particle.twinkleSpeed;
+            }
+        });
+    }
+    
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.particles.forEach(particle => {
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity})`;
+            this.ctx.fill();
+            
+            // Add glow effect for larger particles
+            if (particle.size > 1.5) {
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${particle.opacity * 0.2})`;
+                this.ctx.fill();
+            }
+        });
+    }
+    
+    animate() {
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Autumn Leaves System for Light Mode
+class AutumnLeavesSystem {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.leaves = [];
+        this.leafColors = ['#D2691E', '#FF8C00', '#FF6347', '#CD853F', '#8B4513'];
+        this.resize();
+        this.init();
+        
+        window.addEventListener('resize', () => this.resize());
+    }
+    
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+    
+    init() {
+        const leafCount = Math.floor((this.canvas.width * this.canvas.height) / 20000);
+        
+        for (let i = 0; i < leafCount; i++) {
+            this.leaves.push(this.createLeaf(true));
+        }
+    }
+    
+    createLeaf(initial = false) {
+        return {
+            x: Math.random() * this.canvas.width,
+            y: initial ? Math.random() * this.canvas.height : -20,
+            size: Math.random() * 15 + 10,
+            speedX: (Math.random() - 0.5) * 2,
+            speedY: Math.random() * 2 + 1,
+            rotation: Math.random() * Math.PI * 2,
+            rotationSpeed: (Math.random() - 0.5) * 0.1,
+            color: this.leafColors[Math.floor(Math.random() * this.leafColors.length)],
+            opacity: Math.random() * 0.7 + 0.3,
+            swayAmount: Math.random() * 30 + 20,
+            swaySpeed: Math.random() * 0.02 + 0.01,
+            time: Math.random() * Math.PI * 2
+        };
+    }
+    
+    update() {
+        this.leaves.forEach((leaf, index) => {
+            leaf.y += leaf.speedY;
+            leaf.time += leaf.swaySpeed;
+            leaf.x += Math.sin(leaf.time) * leaf.swayAmount * 0.02 + leaf.speedX;
+            leaf.rotation += leaf.rotationSpeed;
+            
+            // Reset leaf when it falls off screen
+            if (leaf.y > this.canvas.height + 20) {
+                this.leaves[index] = this.createLeaf();
+            }
+            
+            // Wrap horizontally
+            if (leaf.x < -20) leaf.x = this.canvas.width + 20;
+            if (leaf.x > this.canvas.width + 20) leaf.x = -20;
+        });
+    }
+    
+    drawLeaf(leaf) {
+        this.ctx.save();
+        this.ctx.translate(leaf.x, leaf.y);
+        this.ctx.rotate(leaf.rotation);
+        this.ctx.globalAlpha = leaf.opacity;
+        
+        // Draw a simple leaf shape
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -leaf.size);
+        this.ctx.quadraticCurveTo(leaf.size * 0.5, -leaf.size * 0.5, leaf.size * 0.4, 0);
+        this.ctx.quadraticCurveTo(leaf.size * 0.3, leaf.size * 0.3, 0, leaf.size);
+        this.ctx.quadraticCurveTo(-leaf.size * 0.3, leaf.size * 0.3, -leaf.size * 0.4, 0);
+        this.ctx.quadraticCurveTo(-leaf.size * 0.5, -leaf.size * 0.5, 0, -leaf.size);
+        
+        this.ctx.fillStyle = leaf.color;
+        this.ctx.fill();
+        
+        // Add leaf vein
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, -leaf.size);
+        this.ctx.lineTo(0, leaf.size);
+        this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.2)';
+        this.ctx.lineWidth = 1;
+        this.ctx.stroke();
+        
+        this.ctx.restore();
+    }
+    
+    draw() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        this.leaves.forEach(leaf => {
+            this.drawLeaf(leaf);
+        });
+    }
+    
+    animate() {
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Initialize the animation systems
+function initBackgroundAnimations() {
+    const particlesCanvas = document.getElementById('particlesCanvas');
+    const leavesCanvas = document.getElementById('leavesCanvas');
+    
+    if (particlesCanvas && leavesCanvas) {
+        const particleSystem = new ParticleSystem(particlesCanvas);
+        const leavesSystem = new AutumnLeavesSystem(leavesCanvas);
+        
+        particleSystem.animate();
+        leavesSystem.animate();
+    }
+}
+
+// Interactive Celestial Theme Switcher
+function initThemeToggle() {
+    const celestialContainer = document.getElementById('celestialContainer');
+    const moon = document.getElementById('moon');
+    const sun = document.getElementById('sun');
+    const body = document.body;
+    
+    // Check for saved theme preference or default to dark mode
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    
+    if (currentTheme === 'light') {
+        body.classList.add('light-mode');
+    }
+    
+    // Click handler for theme switching
+    celestialContainer.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Add animation class
+        celestialContainer.style.transform = 'scale(0.8) rotate(360deg)';
+        
+        setTimeout(() => {
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+                showToast('☀️ Switched to light mode', 'info');
+                
+                // Animate sun appearance
+                sun.style.transform = 'translate(-50%, -50%) scale(1.2) rotate(0deg)';
+                setTimeout(() => {
+                    sun.style.transform = 'translate(-50%, -50%) scale(1) rotate(0deg)';
+                }, 300);
+            } else {
+                localStorage.setItem('theme', 'dark');
+                showToast('🌙 Switched to dark mode', 'info');
+                
+                // Animate moon appearance
+                moon.style.transform = 'translate(-50%, -50%) scale(1.2)';
+                setTimeout(() => {
+                    moon.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 300);
+            }
+            
+            // Reset container transform
+            celestialContainer.style.transform = 'scale(1) rotate(0deg)';
+        }, 300);
+    });
+    
+    // Add hover effect
+    celestialContainer.addEventListener('mouseenter', function() {
+        const currentElement = body.classList.contains('light-mode') ? sun : moon;
+        currentElement.style.transform = 'translate(-50%, -50%) scale(1.1)';
+    });
+    
+    celestialContainer.addEventListener('mouseleave', function() {
+        const currentElement = body.classList.contains('light-mode') ? sun : moon;
+        currentElement.style.transform = 'translate(-50%, -50%) scale(1)';
+    });
+}
+
+// Add floating particles interaction
+function initFloatingParticles() {
+    const particles = document.querySelectorAll('.particle');
+    
+    particles.forEach((particle, index) => {
+        // Add random delay to start animations
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        
+        // Add mouse interaction
+        particle.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(2)';
+            this.style.opacity = '1';
+        });
+        
+        particle.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.opacity = '';
+        });
+    });
+}
+
+
 // Call the initialize function
 initializeApp();
+
+
