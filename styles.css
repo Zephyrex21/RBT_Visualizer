@@ -97,6 +97,7 @@ body.light-mode h1 {
 
 .tree-placeholder{
     margin-top: 1rem;
+    font-size: small;
 }
 
 body.light-mode .subtitle {
