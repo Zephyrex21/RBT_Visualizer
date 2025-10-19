@@ -5634,3 +5634,9 @@ body.light-mode .star.large {
         min-height: 45vh;
     }
 }
+
+@media (max-width: 768px) {
+    .comparison-section {
+        display: none !important;
+    }
+}
