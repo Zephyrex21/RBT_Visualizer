@@ -5640,3 +5640,9 @@ body.light-mode .star.large {
         display: none !important;
     }
 }
+
+@media (max-width: 768px) {
+    .tree-placeholder {
+        display: none !important;
+    }
+}
