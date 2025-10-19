@@ -1,0 +1,40 @@
+# netlify.toml
+
+# Settings for the whole site
+[build]
+  # This command isn't strictly needed for a static site but is good practice
+  command = "echo 'No build command needed'"
+  # The directory that contains your final, built site
+  publish = "."
+
+# These headers tell browsers how to cache your files.
+# This improves speed for returning visitors.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Cache HTML files for a short time so users get updates
+    Cache-Control = "public, max-age=0, must-revalidate"
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  # Cache CSS, JS, and images for a long time since they don't change often
+  for = "/styles.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/script.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# This section handles your sitemap
+[[redirects]]
+  # If someone goes to your-site.com/sitemap.xml, 
+  # this tells Netlify where to find it.
+  from = "/sitemap.xml"
+  to = "/sitemap.xml"
+  status = 200
