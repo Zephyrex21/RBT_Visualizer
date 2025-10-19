@@ -5191,4 +5191,326 @@ body.light-mode kbd {
     100% { transform: rotate(360deg); }
 }
 
+/* Enhanced particle system with connections */
+.particle-network {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.network-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.8) 0%, transparent 70%);
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    animation: float-particle 20s infinite ease-in-out;
+}
+
+@keyframes float-particle {
+    0%, 100% {
+        transform: translateY(0) translateX(0) scale(1);
+        opacity: 0.3;
+    }
+    25% {
+        transform: translateY(-30px) translateX(20px) scale(1.2);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-20px) translateX(-30px) scale(0.8);
+        opacity: 0.5;
+    }
+    75% {
+        transform: translateY(-40px) translateX(10px) scale(1.1);
+        opacity: 0.7;
+    }
+}
+
+.particle-connection {
+    position: absolute;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
+    transform-origin: left center;
+    animation: pulse-connection 3s infinite ease-in-out;
+}
+
+@keyframes pulse-connection {
+    0%, 100% { opacity: 0.1; }
+    50% { opacity: 0.4; }
+}
+
+/* Add floating gradient orbs for extra visual appeal */
+.gradient-orbs {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.gradient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: float-orb 25s infinite ease-in-out;
+}
+
+.gradient-orb:nth-child(1) {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #9c27b0 0%, transparent 70%);
+    top: -200px;
+    left: -200px;
+    animation-delay: 0s;
+}
+
+.gradient-orb:nth-child(2) {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #ba68c8 0%, transparent 70%);
+    bottom: -150px;
+    right: -150px;
+    animation-delay: 5s;
+}
+
+.gradient-orb:nth-child(3) {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, #ce93d8 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation-delay: 10s;
+}
+
+@keyframes float-orb {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.3;
+    }
+    25% {
+        transform: translate(50px, -100px) scale(1.1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(-30px, 50px) scale(0.9);
+        opacity: 0.4;
+    }
+    75% {
+        transform: translate(80px, 30px) scale(1.05);
+        opacity: 0.6;
+    }
+}
+
+/* Light mode floating orbs */
+body.light-mode .gradient-orb:nth-child(1) {
+    background: radial-gradient(circle, #e1bee7 0%, transparent 70%);
+}
+
+body.light-mode .gradient-orb:nth-child(2) {
+    background: radial-gradient(circle, #ce93d8 0%, transparent 70%);
+}
+
+body.light-mode .gradient-orb:nth-child(3) {
+    background: radial-gradient(circle, #ba68c8 0%, transparent 70%);
+}
+
+
+/* Realistic space stars overlay */
+header {
+    position: relative;
+    overflow: hidden;
+}
+
+/* Space overlay container */
+.space-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.1) 100%);
+}
+
+/* Realistic star styles */
+.star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle ease-in-out infinite;
+}
+
+/* Different star sizes */
+.star.small {
+    width: 0.5px;
+    height: 0.5px;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.8);
+}
+
+.star.medium {
+    width: 1px;
+    height: 1px;
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.9);
+}
+
+.star.large {
+    width: 1.5px;
+    height: 1.5px;
+    box-shadow: 0 0 3px rgba(255, 255, 255, 1);
+}
+
+/* Natural twinkling animation */
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Subtle floating movement */
+@keyframes float-random {
+    0% { transform: translate(0, 0); }
+    25% { transform: translate(1px, -1px); }
+    50% { transform: translate(-1px, 1px); }
+    75% { transform: translate(2px, 0px); }
+    100% { transform: translate(0, 0); }
+}
+
+/* Slow drift animation for background stars */
+@keyframes slow-drift {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(3px, 2px); }
+}
+
+/* Ensure header content stays above stars */
+header h1, header h4, header p {
+    position: relative;
+    z-index: 2;
+}
+
+/* Light mode stars */
+body.light-mode .star {
+    background: rgba(156, 39, 176, 0.7);
+}
+
+body.light-mode .star.small {
+    box-shadow: 0 0 1px rgba(156, 39, 176, 0.6);
+}
+
+body.light-mode .star.medium {
+    box-shadow: 0 0 2px rgba(156, 39, 176, 0.7);
+}
+
+body.light-mode .star.large {
+    box-shadow: 0 0 3px rgba(156, 39, 176, 0.8);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .star {
+        animation-duration: 4s; /* Slower on mobile */
+    }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .star {
+        animation: none;
+        opacity: 0.6;
+    }
+}
+
+
+/* Add subtle glow to larger stars */
+.star.large::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+/* Add occasional shooting star */
+.shooting-star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: shoot 3s linear infinite;
+}
+
+.shooting-star::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, white, transparent);
+    transform: translateY(-50%);
+}
+
+@keyframes shoot {
+    0% {
+        transform: translateX(-100px) translateY(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(300px) translateY(100px);
+        opacity: 0;
+    }
+}
+
+/* Add shooting stars occasionally */
+.space-overlay::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    top: 20%;
+    left: 10%;
+    opacity: 0;
+    animation: shoot 8s linear infinite;
+    animation-delay: 5s;
+}
+
+.space-overlay::after::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 50px;
+    height: 1px;
+    background: linear-gradient(90deg, white, transparent);
+    transform: translateY(-50%);
+}
 

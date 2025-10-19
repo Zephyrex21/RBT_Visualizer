@@ -3836,3 +3836,256 @@ function handleInsert() {
     insertNode();
   }, 100);
 }
+
+// Interactive Particle Network
+class ParticleNetwork {
+    constructor() {
+        this.canvas = document.createElement('canvas');
+        this.canvas.style.position = 'fixed';
+        this.canvas.style.top = '0';
+        this.canvas.style.left = '0';
+        this.canvas.style.width = '100%';
+        this.canvas.style.height = '100%';
+        this.canvas.style.pointerEvents = 'none';
+        this.canvas.style.zIndex = '-1';
+        document.body.appendChild(this.canvas);
+        
+        this.ctx = this.canvas.getContext('2d');
+        this.particles = [];
+        this.mouse = { x: 0, y: 0 };
+        this.init();
+        this.animate();
+        
+        window.addEventListener('resize', () => this.resize());
+        window.addEventListener('mousemove', (e) => {
+            this.mouse.x = e.clientX;
+            this.mouse.y = e.clientY;
+        });
+    }
+    
+    init() {
+        this.resize();
+        const particleCount = Math.floor((this.canvas.width * this.canvas.height) / 15000);
+        
+        for (let i = 0; i < particleCount; i++) {
+            this.particles.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                radius: Math.random() * 2 + 1,
+                opacity: Math.random() * 0.5 + 0.2
+            });
+        }
+    }
+    
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+    
+    animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        // Update and draw particles
+        this.particles.forEach((particle, i) => {
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            
+            // Bounce off edges
+            if (particle.x < 0 || particle.x > this.canvas.width) particle.vx *= -1;
+            if (particle.y < 0 || particle.y > this.canvas.height) particle.vy *= -1;
+            
+            // Mouse interaction
+            const dx = this.mouse.x - particle.x;
+            const dy = this.mouse.y - particle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (distance < 100) {
+                const force = (100 - distance) / 100;
+                particle.vx -= (dx / distance) * force * 0.02;
+                particle.vy -= (dy / distance) * force * 0.02;
+            }
+            
+            // Draw particle
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(59, 130, 246, ${particle.opacity})`;
+            this.ctx.fill();
+            
+            // Draw connections
+            for (let j = i + 1; j < this.particles.length; j++) {
+                const other = this.particles[j];
+                const dx = other.x - particle.x;
+                const dy = other.y - particle.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                if (distance < 150) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(particle.x, particle.y);
+                    this.ctx.lineTo(other.x, other.y);
+                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${0.1 * (1 - distance / 150)})`;
+                    this.ctx.stroke();
+                }
+            }
+        });
+        
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Initialize the particle network
+const particleNetwork = new ParticleNetwork();
+
+
+// Realistic space stars generator
+class RealisticSpaceStars {
+    constructor() {
+        this.header = document.querySelector('header');
+        this.stars = [];
+        this.init();
+    }
+    
+    init() {
+        this.createSpaceOverlay();
+        this.generateStars();
+        this.animateStars();
+    }
+    
+    createSpaceOverlay() {
+        this.spaceOverlay = document.createElement('div');
+        this.spaceOverlay.className = 'space-overlay';
+        this.header.appendChild(this.spaceOverlay);
+    }
+    
+    generateStars() {
+        // Create different layers of stars for depth
+        this.createStarLayer(30, 'small', 8, 12); // Background stars
+        this.createStarLayer(15, 'medium', 6, 10); // Mid-layer stars
+        this.createStarLayer(8, 'large', 4, 8);    // Foreground stars
+    }
+    
+    createStarLayer(count, size, minDuration, maxDuration) {
+        for (let i = 0; i < count; i++) {
+            const star = document.createElement('div');
+            star.className = `star ${size}`;
+            
+            // Random position
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            
+            // Random animation duration
+            const duration = minDuration + Math.random() * (maxDuration - minDuration);
+            const delay = Math.random() * 5;
+            
+            // Random initial opacity
+            const opacity = 0.3 + Math.random() * 0.7;
+            
+            star.style.cssText = `
+                left: ${x}%;
+                top: ${y}%;
+                animation-duration: ${duration}s;
+                animation-delay: ${delay}s;
+                opacity: ${opacity};
+            `;
+            
+            this.spaceOverlay.appendChild(star);
+            this.stars.push({
+                element: star,
+                x: x,
+                y: y,
+                baseX: x,
+                baseY: y,
+                size: size,
+                speed: 0.01 + Math.random() * 0.02,
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+    }
+    
+    animateStars() {
+        // Create subtle movement for each star
+        this.stars.forEach(star => {
+            this.animateStar(star);
+        });
+    }
+    
+    animateStar(star) {
+        // Create natural, subtle movement
+        const moveStar = () => {
+            // Calculate new position with subtle movement
+            const time = Date.now() * 0.001;
+            const offsetX = Math.sin(time * star.speed + star.phase) * 0.5;
+            const offsetY = Math.cos(time * star.speed * 0.7 + star.phase) * 0.3;
+            
+            // Apply movement
+            star.element.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            
+            // Continue animation
+            requestAnimationFrame(moveStar);
+        };
+        
+        moveStar();
+    }
+}
+
+// Alternative: Even simpler version with just CSS animations
+class SimpleSpaceStars {
+    constructor() {
+        this.header = document.querySelector('header');
+        this.init();
+    }
+    
+    init() {
+        this.createSpaceOverlay();
+        this.generateStaticStars();
+    }
+    
+    createSpaceOverlay() {
+        this.spaceOverlay = document.createElement('div');
+        this.spaceOverlay.className = 'space-overlay';
+        this.header.appendChild(this.spaceOverlay);
+    }
+    
+    generateStaticStars() {
+        // Create 50 stars with random properties
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            
+            // Random size
+            const size = Math.random();
+            let sizeClass = 'small';
+            if (size > 0.7) sizeClass = 'medium';
+            if (size > 0.9) sizeClass = 'large';
+            
+            star.className = `star ${sizeClass}`;
+            
+            // Random position
+            const x = Math.random() * 100;
+            const y = Math.random() * 100;
+            
+            // Random animation properties
+            const duration = 3 + Math.random() * 7;
+            const delay = Math.random() * 5;
+            const opacity = 0.3 + Math.random() * 0.7;
+            
+            star.style.cssText = `
+                left: ${x}%;
+                top: ${y}%;
+                animation-duration: ${duration}s;
+                animation-delay: ${delay}s;
+                opacity: ${opacity};
+            `;
+            
+            this.spaceOverlay.appendChild(star);
+        }
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Choose one of the implementations:
+    new RealisticSpaceStars();  // With natural movement
+    // OR
+    // new SimpleSpaceStars();    // Static with twinkling
+});
