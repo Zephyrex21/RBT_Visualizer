@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://rbt-visualizer.netlify.app/sitemap.xml
