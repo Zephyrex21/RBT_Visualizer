@@ -3829,13 +3829,3 @@ function addScrollIndicator() {
     window.addEventListener('scroll', scrollHandler);
 }
 
-
-const observer = new IntersectionObserver((entries, observer) => {
-  entries.forEach(entry => {
-    if(entry.isIntersecting){
-      entry.target.innerHTML = `<p>Your heavy content here</p>`; 
-      observer.unobserve(entry.target);
-    }
-  });
-});
-document.querySelectorAll('.lazy-section').forEach(section => observer.observe(section));
