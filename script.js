@@ -3829,3 +3829,10 @@ function addScrollIndicator() {
     window.addEventListener('scroll', scrollHandler);
 }
 
+let actionTimeout;
+function handleInsert() {
+  clearTimeout(actionTimeout);
+  actionTimeout = setTimeout(() => {
+    insertNode();
+  }, 100);
+}

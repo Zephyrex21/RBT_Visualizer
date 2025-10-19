@@ -16,6 +16,19 @@
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Comic Relief';
+  src: url('https://fonts.googleapis.com/css2?family=Comic+Relief:wght@400;700&display=swap') format('woff2');
+  font-display: swap;
+}
+
+button:focus {
+  outline: 2px solid #FF5733;
+  outline-offset: 2px;
+}
+
+
+
 :root {
     /* Dark mode colors (existing) */
     --primary: #dc2626;
