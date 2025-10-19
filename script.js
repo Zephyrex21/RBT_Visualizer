@@ -1216,6 +1216,9 @@ function toggleNullLeaves() {
 function drawTree() {
     const svg = document.getElementById('treeSvg');
     svg.innerHTML = '';
+
+     // ADD JUST THIS LINE:
+    svg.style.overflow = 'visible';
     
     const tree = currentTreeType === 'rb' ? rbTree : avlTree;
     const root = currentTreeType === 'rb' ? tree.root : tree.root;
@@ -1253,7 +1256,43 @@ function drawTree() {
         minHorizontalSpacing = 30;
     }
     
+    // Calculate positions
     const positions = calculateNodePositions(root, width / 2, 50, width / 4, nodeRadius, minHorizontalSpacing);
+
+    
+    
+    // Find the bounds of all positions
+    const bounds = calculateBounds(positions, nodeRadius);
+    
+    // Make SVG larger if needed to contain all nodes
+    const svgWidth = Math.max(width, bounds.width + 100);
+    const svgHeight = Math.max(height, bounds.height + 100);
+    
+    svg.setAttribute('width', svgWidth);
+    svg.setAttribute('height', svgHeight);
+    
+    // Add glow filter definition
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    
+    const glowFilter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+    glowFilter.setAttribute('id', 'glow');
+    
+    const feGaussianBlur = document.createElementNS('http://www.w3.org/2000/svg', 'feGaussianBlur');
+    feGaussianBlur.setAttribute('stdDeviation', '3');
+    feGaussianBlur.setAttribute('result', 'coloredBlur');
+    
+    const feMerge = document.createElementNS('http://www.w3.org/2000/svg', 'feMerge');
+    const feMergeNode1 = document.createElementNS('http://www.w3.org/2000/svg', 'feMergeNode');
+    feMergeNode1.setAttribute('in', 'coloredBlur');
+    const feMergeNode2 = document.createElementNS('http://www.w3.org/2000/svg', 'feMergeNode');
+    feMergeNode2.setAttribute('in', 'SourceGraphic');
+    
+    feMerge.appendChild(feMergeNode1);
+    feMerge.appendChild(feMergeNode2);
+    glowFilter.appendChild(feGaussianBlur);
+    glowFilter.appendChild(feMerge);
+    defs.appendChild(glowFilter);
+    svg.appendChild(defs);
     
     // Draw edges
     positions.forEach(pos => {
@@ -1323,6 +1362,7 @@ function drawTree() {
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('r', nodeRadius);
         circle.setAttribute('class', 'node-circle');
+        circle.setAttribute('filter', 'url(#glow)');
         
         if (currentTreeType === 'rb') {
             circle.setAttribute('fill', pos.node.color === 'red' ? '#dc2626' : '#1f2937');
@@ -1376,6 +1416,28 @@ function drawTree() {
     });
     
     updateStats();
+}
+
+// Add this helper function to calculate bounds
+function calculateBounds(positions, nodeRadius) {
+    let minX = Infinity, maxX = -Infinity;
+    let minY = Infinity, maxY = -Infinity;
+    
+    positions.forEach(pos => {
+        minX = Math.min(minX, pos.x - nodeRadius);
+        maxX = Math.max(maxX, pos.x + nodeRadius);
+        minY = Math.min(minY, pos.y - nodeRadius);
+        maxY = Math.max(maxY, pos.y + nodeRadius);
+    });
+    
+    return {
+        minX,
+        maxX,
+        minY,
+        maxY,
+        width: maxX - minX,
+        height: maxY - minY
+    };
 }
 
 function drawEdge(svg, x1, y1, x2, y2, opacity = 0.6) {
