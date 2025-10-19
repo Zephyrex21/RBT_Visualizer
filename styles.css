@@ -95,6 +95,10 @@ body.light-mode h1 {
     margin-top: 1.5rem;
 }
 
+.tree-placeholder{
+    margin-top: 1rem;
+}
+
 body.light-mode .subtitle {
     color: var(--light-text-secondary);
 }
@@ -5172,3 +5176,4 @@ body.light-mode kbd {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
