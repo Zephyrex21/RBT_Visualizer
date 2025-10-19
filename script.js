@@ -4204,3 +4204,60 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('resize', updateMobileControls);
+
+// Mobile control functions
+function mobileInsertNode() {
+    const input = document.getElementById('mobileNodeValue');
+    document.getElementById('nodeValue').value = input.value;
+    insertNode();
+    input.value = '';
+}
+
+function mobileDeleteNode() {
+    const input = document.getElementById('mobileDeleteValue');
+    document.getElementById('deleteValue').value = input.value;
+    deleteNode();
+    input.value = '';
+}
+
+// Show/hide mobile controls based on screen size
+function updateMobileView() {
+    const isMobile = window.innerWidth <= 768;
+    const mobileControls = document.getElementById('mobileControlsSection');
+    const rightPanel = document.querySelector('.right-panel');
+    const algorithmPanel = document.querySelector('.algorithm-panel');
+    
+    if (isMobile) {
+        // Show mobile controls
+        if (mobileControls) {
+            mobileControls.style.display = 'block';
+        }
+        
+        // Hide desktop panels
+        if (rightPanel) {
+            rightPanel.style.display = 'none';
+        }
+        
+        if (algorithmPanel) {
+            algorithmPanel.style.display = 'none';
+        }
+    } else {
+        // Hide mobile controls
+        if (mobileControls) {
+            mobileControls.style.display = 'none';
+        }
+        
+        // Show desktop panels
+        if (rightPanel) {
+            rightPanel.style.display = 'flex';
+        }
+        
+        if (algorithmPanel) {
+            algorithmPanel.style.display = 'flex';
+        }
+    }
+}
+
+// Call this function when the page loads and when window is resized
+document.addEventListener('DOMContentLoaded', updateMobileView);
+window.addEventListener('resize', updateMobileView);

@@ -5833,3 +5833,73 @@ body.light-mode .star.large {
         background: var(--light-accent);
     }
 }
+
+/* ========== MOBILE VIEW FIXES ========== */
+
+/* 1. Hide comparison section on mobile */
+@media (max-width: 768px) {
+    .comparison-section {
+        display: none !important;
+    }
+}
+
+/* 2. Hide visual indicators on mobile */
+@media (max-width: 768px) {
+    .visual-cues {
+        display: none !important;
+    }
+    
+    .algorithm-details {
+        display: none !important;
+    }
+}
+
+/* 3. Hide placeholder paragraphs on mobile */
+@media (max-width: 768px) {
+    .tree-placeholder {
+        display: none !important;
+    }
+}
+
+/* 4. Footer mobile adjustments */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+        text-align: center !important;
+    }
+    
+    /* Hide all footer sections except the first one */
+    .footer-section:not(:first-child) {
+        display: none !important;
+    }
+    
+    /* Keep the first section visible with centered content */
+    .footer-section:first-child {
+        text-align: center !important;
+    }
+}
+
+/* 5. Mobile layout adjustments */
+@media (max-width: 768px) {
+    .main-layout {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    /* Hide right panel on mobile */
+    .right-panel {
+        display: none !important;
+    }
+    
+    /* Hide algorithm panel on mobile */
+    .algorithm-panel {
+        display: none !important;
+    }
+    
+    /* Make visualization panel take full width */
+    .visualization-panel {
+        order: 1 !important;
+        min-height: 50vh !important;
+    }
+}
