@@ -981,7 +981,7 @@ if balance > 1 || balance < -1
 
 
 // Global variables
-let algorithmSpeed = 800; 
+let algorithmSpeed = 600; 
 let currentTreeType = 'rb';
 let rbTree = new RedBlackTree();
 let avlTree = new AVLTree();
