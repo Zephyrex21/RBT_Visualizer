@@ -5646,3 +5646,190 @@ body.light-mode .star.large {
         display: none !important;
     }
 }
+
+/* Footer mobile adjustments */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    /* Hide all footer sections except the first one (Red Blackify info) */
+    .footer-section:not(:first-child) {
+        display: none !important;
+    }
+    
+    /* Keep the first section visible with centered content */
+    .footer-section:first-child {
+        text-align: center;
+    }
+    
+    .footer-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .footer-description {
+        max-width: 100%;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-social {
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+        padding-top: 1rem;
+    }
+    
+    .footer-copyright p {
+        font-size: 0.8rem;
+    }
+    
+    .footer-bottom-links {
+        justify-content: center;
+        gap: 1rem;
+    }
+    
+    .footer-bottom-link {
+        font-size: 0.8rem;
+    }
+}
+
+/* Hide visual indicators on mobile */
+@media (max-width: 768px) {
+    .visual-cues {
+        display: none !important;
+    }
+    
+    /* Also hide the algorithm details section to save space */
+    .algorithm-details {
+        display: none !important;
+    }
+    
+    /* Make algorithm display more compact on mobile */
+    .algorithm-display {
+        padding: 0.75rem !important;
+        min-height: 120px !important;
+    }
+    
+    .current-step {
+        font-size: 0.9rem !important;
+    }
+    
+    .step-description {
+        font-size: 0.8rem !important;
+    }
+}
+
+/* Mobile layout adjustments */
+@media (max-width: 768px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    /* Hide right panel on mobile */
+    .right-panel {
+        display: none !important;
+    }
+    
+    /* Create mobile controls section */
+    .mobile-controls-section {
+        display: block !important;
+        order: 2;
+        margin-top: 1rem;
+    }
+    
+    /* Hide algorithm panel on mobile */
+    .algorithm-panel {
+        display: none !important;
+    }
+    
+    /* Make visualization panel take full width */
+    .visualization-panel {
+        order: 1;
+        min-height: 50vh;
+    }
+    
+    /* Mobile controls styling */
+    .mobile-controls {
+        background: var(--bg-light);
+        border-radius: 1rem;
+        padding: 1rem;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+    }
+    
+    body.light-mode .mobile-controls {
+        background: var(--light-bg-secondary);
+        border-color: var(--light-border);
+        box-shadow: var(--light-shadow);
+    }
+    
+    .mobile-controls .panel-header {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .mobile-controls .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    
+    .mobile-controls .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .mobile-controls button {
+        padding: 0.5rem;
+        font-size: 0.85rem;
+    }
+    
+    /* Tree type selector for mobile */
+    .mobile-tree-type-selector {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .mobile-tree-type-btn {
+        flex: 1;
+        padding: 0.4rem;
+        background: var(--border);
+        color: var(--text-secondary);
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+    
+    body.light-mode .mobile-tree-type-btn {
+        background: var(--light-border);
+        color: var(--light-text-secondary);
+    }
+    
+    .mobile-tree-type-btn.active {
+        background: var(--accent);
+        color: white;
+    }
+    
+    body.light-mode .mobile-tree-type-btn.active {
+        background: var(--light-accent);
+    }
+}

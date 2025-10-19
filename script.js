@@ -4152,3 +4152,55 @@ document.addEventListener('DOMContentLoaded', () => {
     // new SimpleSpaceStars();    // Static with twinkling
 });
 
+// Mobile control functions
+function mobileInsertNode() {
+    const input = document.getElementById('mobileNodeValue');
+    document.getElementById('nodeValue').value = input.value;
+    insertNode();
+    input.value = '';
+}
+
+function mobileDeleteNode() {
+    const input = document.getElementById('mobileDeleteValue');
+    document.getElementById('deleteValue').value = input.value;
+    deleteNode();
+    input.value = '';
+}
+
+// Sync mobile tree type buttons with desktop
+function syncMobileTreeTypeButtons() {
+    const isRB = currentTreeType === 'rb';
+    document.getElementById('mobileRbTreeBtn').classList.toggle('active', isRB);
+    document.getElementById('mobileAvlTreeBtn').classList.toggle('active', !isRB);
+}
+
+// Update your existing switchTreeType function to sync mobile buttons
+function switchTreeType(type) {
+    // ... your existing switchTreeType code ...
+    
+    // Add this at the end to sync mobile buttons
+    syncMobileTreeTypeButtons();
+}
+
+// Show/hide mobile controls based on screen size
+function updateMobileControls() {
+    const isMobile = window.innerWidth <= 768;
+    const mobileControls = document.querySelector('.mobile-controls-section');
+    const rightPanel = document.querySelector('.right-panel');
+    
+    if (isMobile) {
+        mobileControls.style.display = 'block';
+        rightPanel.style.display = 'none';
+    } else {
+        mobileControls.style.display = 'none';
+        rightPanel.style.display = 'flex';
+    }
+}
+
+// Call this function when the page loads and when window is resized
+document.addEventListener('DOMContentLoaded', () => {
+    updateMobileControls();
+    syncMobileTreeTypeButtons();
+});
+
+window.addEventListener('resize', updateMobileControls);

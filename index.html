@@ -245,10 +245,10 @@
     <div class="container">
 
         <header>
-    <h1>Red Blackify
+            <h1>Red Blackify
         <h4>"Visualize. Rotate. Learn."</h4>
-    </h1>
-    <p class="subtitle">Interactive tool to visualize and understand Red-Black Tree</p>
+            </h1>
+             <p class="subtitle">Interactive tool to visualize and understand Red-Black Tree</p>
         </header>
 
         <div class="main-layout">
@@ -446,6 +446,42 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Mobile Controls Section (shown only on mobile) -->
+            <div class="mobile-controls-section" style="display: none;">
+    <div class="mobile-controls">
+        <div class="panel-header">
+            <span>⚙️</span> Controls
+        </div>
+        
+        <div class="mobile-tree-type-selector">
+            <button class="mobile-tree-type-btn active" id="mobileRbTreeBtn" onclick="switchTreeType('rb')">Red-Black</button>
+            <button class="mobile-tree-type-btn" id="mobileAvlTreeBtn" onclick="switchTreeType('avl')">AVL</button>
+        </div>
+        
+        <div class="controls">
+            <div class="input-group">
+                <input type="number" id="mobileNodeValue" placeholder="Enter value" min="0" max="999">
+                <button onclick="mobileInsertNode()" class="success">Insert</button>
+            </div>
+            <div class="input-group">
+                <input type="number" id="mobileDeleteValue" placeholder="Delete value" min="0" max="999">
+                <button onclick="mobileDeleteNode()" class="danger">Delete</button>
+            </div>
+            <button onclick="generateRandom()" class="secondary" style="grid-column: 1 / -1;">Generate Random</button>
+            <button onclick="clearTree()" class="danger" style="grid-column: 1 / -1;">Clear Tree</button>
+        </div>
+        
+        <div class="panel-section">
+            <div class="toggle-container">
+                <span>Show Null Leaves:</span>
+                <div class="toggle-switch" id="mobileNullToggle" onclick="toggleNullLeaves()">
+                    <div class="toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+    </div>
             </div>
 
             <!-- Controls Panel (Right) -->
